@@ -1,14 +1,13 @@
 # Dependencies
-node_modules
-.pnp
-.pnp.js
+node_modules/
+dist/
+.env
 
 # Testing
 coverage
 
 # Production
 build
-dist
 
 # Misc
 .DS_Store
@@ -23,5 +22,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Editor
-.vscode
-.idea 
+.vscode/
+.idea/
+*.swp
+*.swo 
