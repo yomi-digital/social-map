@@ -6,7 +6,7 @@ spec:
       branch: main
       repo_clone_url: https://github.com/tuousername/social-map.git
     build_command: yarn install && yarn build
-    run_command: yarn start
+    run_command: npx serve -s dist -l 8080
     envs:
     - key: NODE_ENV
       value: production
