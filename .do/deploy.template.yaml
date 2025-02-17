@@ -1,13 +1,13 @@
 spec:
   name: social-map
-  services:
+  static_sites:
   - name: web
     git:
       branch: main
       repo_clone_url: https://github.com/tuousername/social-map.git
     build_command: yarn install && yarn build
-    run_command: npx serve -s dist -l 8080
+    output_dir: dist
+    environment_slug: node-js
     envs:
-    - key: NODE_ENV
-      value: production
-    http_port: 8080 
+    - key: NODE_VERSION
+      value: 18 
