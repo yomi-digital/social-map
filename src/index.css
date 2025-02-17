@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.leaflet-tile-pane {
+  filter: hue-rotate(100deg) saturate(200%) brightness(90%);
+}
+
+/* Stili per il cluster */
+.custom-marker-cluster {
+  background: transparent;
+}
+
+.cluster-icon {
+  background-color: #00ffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid white;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+} 
