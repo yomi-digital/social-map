@@ -1,0 +1,13 @@
+spec:
+  name: social-map
+  services:
+  - name: web
+    git:
+      branch: main
+      repo_clone_url: https://github.com/tuousername/social-map.git
+    build_command: yarn install && yarn build
+    run_command: yarn preview --host 0.0.0.0 --port 8080
+    envs:
+    - key: NODE_ENV
+      value: production
+    http_port: 8080 
