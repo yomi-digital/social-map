@@ -53,8 +53,9 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
         `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/organizations.json`,
         {
           headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json'
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'X-GitHub-Api-Version': '2022-11-28'
           }
         }
       );
@@ -75,7 +76,9 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
         {
           method: 'POST',
           headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'X-GitHub-Api-Version': '2022-11-28',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -91,7 +94,9 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
         {
           method: 'PUT',
           headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'X-GitHub-Api-Version': '2022-11-28',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -109,7 +114,9 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
         {
           method: 'POST',
           headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'X-GitHub-Api-Version': '2022-11-28',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
