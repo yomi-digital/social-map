@@ -3,14 +3,21 @@ const owner = 'yomi-digital';
 const repo = 'social-map';
 const baseUrl = 'https://api.github.com';
 
-console.log('GitHub Service Configuration:', {
-  owner,
-  repo,
-  token: token ? 'Present' : 'Missing',
+// Aggiungi più logging per il debug in produzione
+console.log('Environment:', {
+  isDevelopment: import.meta.env.DEV,
+  isProduction: import.meta.env.PROD,
+  mode: import.meta.env.MODE,
+  baseUrl: import.meta.env.BASE_URL,
+  hasToken: !!token
 });
 
 if (!token) {
-  throw new Error('GitHub token non trovato!');
+  console.error('Token non trovato. Variabili ambiente:', {
+    importMetaEnv: import.meta.env,
+    processEnv: process.env
+  });
+  throw new Error('GitHub token non trovato! Controlla le variabili d\'ambiente in produzione.');
 }
 
 const headers = {
