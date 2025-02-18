@@ -20,6 +20,10 @@ interface AddOrganizationFormProps {
   onClose: () => void;
 }
 
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+const REPO_OWNER = 'liviolombardo';
+const REPO_NAME = 'social-map';
+
 const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -42,27 +46,86 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
       id,
       ...formData
     };
-    
-    // Crea una PR su GitHub
-    try {
-      const response = await fetch('https://api.github.com/repos/tuousername/social-map/pulls', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: `Add ${formData.name}`,
-          body: `Add new organization: ${formData.name}\n\n\`\`\`json\n${JSON.stringify(newOrganization, null, 2)}\n\`\`\``,
-          head: `add-org-${id}`,
-          base: 'main'
-        })
-      });
 
-      if (response.ok) {
-        alert('Richiesta inviata con successo! Grazie per il contributo.');
+    try {
+      // 1. Ottieni il contenuto attuale del file
+      const currentFileResponse = await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/organizations.json`,
+        {
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        }
+      );
+      
+      if (!currentFileResponse.ok) throw new Error('Errore nel recupero del file');
+      const currentFile = await currentFileResponse.json();
+      
+      // 2. Decodifica il contenuto attuale
+      const currentContent = JSON.parse(atob(currentFile.content));
+      
+      // 3. Aggiungi la nuova organizzazione
+      currentContent.organizations.push(newOrganization);
+      
+      // 4. Crea un nuovo branch
+      const branchName = `add-org-${id}`;
+      await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: `refs/heads/${branchName}`,
+            sha: currentFile.sha
+          })
+        }
+      );
+      
+      // 5. Committa il file aggiornato
+      await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/organizations.json`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: `Add ${formData.name}`,
+            content: btoa(JSON.stringify(currentContent, null, 2)),
+            branch: branchName,
+            sha: currentFile.sha
+          })
+        }
+      );
+      
+      // 6. Crea la PR
+      const prResponse = await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/pulls`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: `Add ${formData.name}`,
+            body: `Add new organization: ${formData.name}\n\n\`\`\`json\n${JSON.stringify(newOrganization, null, 2)}\n\`\`\``,
+            head: branchName,
+            base: 'main'
+          })
+        }
+      );
+
+      if (prResponse.ok) {
+        alert('Pull Request creata con successo! Grazie per il contributo.');
         onClose();
       } else {
-        throw new Error('Errore nell\'invio della richiesta');
+        throw new Error('Errore nella creazione della PR');
       }
     } catch (error) {
       console.error('Error:', error);
