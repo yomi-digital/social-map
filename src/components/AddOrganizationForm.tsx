@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Organization } from '../types/Organization';
+import { githubService } from '../services/github';
 
 type Sector = Organization['sector'];
 
@@ -19,10 +20,6 @@ interface AddOrganizationFormProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-const REPO_OWNER = 'liviolombardo';
-const REPO_NAME = 'social-map';
 
 const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
   const [formData, setFormData] = useState({
@@ -48,95 +45,38 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
     };
 
     try {
-      // 1. Ottieni il contenuto attuale del file
-      const currentFileResponse = await fetch(
-        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/organizations.json`,
-        {
-          headers: {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        }
-      );
+      // 1. Ottieni il file
+      const currentFile = await githubService.getFile('src/data/organizations.json');
       
-      if (!currentFileResponse.ok) throw new Error('Errore nel recupero del file');
-      const currentFile = await currentFileResponse.json();
-      
-      // 2. Decodifica il contenuto attuale
+      // 2. Decodifica e aggiorna il contenuto
       const currentContent = JSON.parse(atob(currentFile.content));
-      
-      // 3. Aggiungi la nuova organizzazione
       currentContent.organizations.push(newOrganization);
       
-      // 4. Crea un nuovo branch
+      // 3. Crea un nuovo branch
       const branchName = `add-org-${id}`;
-      await fetch(
-        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ref: `refs/heads/${branchName}`,
-            sha: currentFile.sha
-          })
-        }
+      await githubService.createBranch(branchName, currentFile.sha);
+      
+      // 4. Aggiorna il file
+      await githubService.updateFile(
+        'src/data/organizations.json',
+        JSON.stringify(currentContent, null, 2),
+        `Add ${formData.name}`,
+        branchName,
+        currentFile.sha
       );
       
-      // 5. Committa il file aggiornato
-      await fetch(
-        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/organizations.json`,
-        {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: `Add ${formData.name}`,
-            content: btoa(JSON.stringify(currentContent, null, 2)),
-            branch: branchName,
-            sha: currentFile.sha
-          })
-        }
-      );
-      
-      // 6. Crea la PR
-      const prResponse = await fetch(
-        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/pulls`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: `Add ${formData.name}`,
-            body: `Add new organization: ${formData.name}\n\n\`\`\`json\n${JSON.stringify(newOrganization, null, 2)}\n\`\`\``,
-            head: branchName,
-            base: 'main'
-          })
-        }
+      // 5. Crea la PR
+      await githubService.createPR(
+        `Add ${formData.name}`,
+        `Add new organization: ${formData.name}\n\n\`\`\`json\n${JSON.stringify(newOrganization, null, 2)}\n\`\`\``,
+        branchName
       );
 
-      if (prResponse.ok) {
-        alert('Pull Request creata con successo! Grazie per il contributo.');
-        onClose();
-      } else {
-        throw new Error('Errore nella creazione della PR');
-      }
+      alert('Pull Request creata con successo! Grazie per il contributo.');
+      onClose();
     } catch (error) {
       console.error('Error:', error);
-      alert('Si è verificato un errore. Per favore, riprova più tardi.');
+      alert(`Si è verificato un errore: ${error instanceof Error ? error.message : 'Errore sconosciuto'}`);
     }
   };
 
