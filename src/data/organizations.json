@@ -142,6 +142,19 @@
       "website": "https://toolboxcoworking.com/",
       "email": "",
       "phone": ""
+    },
+    {
+      "id": "1739881737960",
+      "name": "YOMI",
+      "city": "Ragusa",
+      "region": "Sicilia",
+      "province": "Ragusa",
+      "address": "Via Gian DOmenico Cavallaro 51",
+      "zipCode": "97100",
+      "sector": "Coworking",
+      "website": "https://yomi.digital",
+      "email": "hey@yomi.digital",
+      "phone": ""
     }
   ]
 }
