@@ -5,8 +5,6 @@ An interactive map showing the distribution of innovation spaces, coworking, and
 ## Features
 - Interactive map visualization
 - Automatic marker clustering for dense areas
-- Multi-sector organization support
-- Advanced filtering by region, province, city, and sectors
 - Detailed information popups
 - Visual filtering for better map readability
 - Automatic geocoding from addresses
@@ -14,7 +12,7 @@ An interactive map showing the distribution of innovation spaces, coworking, and
 
 ## How to Add an Organization
 
-To add a new organization, use the "Add Your Space" button or modify the `src/data/organizations.json` file. Each organization must follow this format:
+To add a new organization, modify the `src/data/organizations.json` file. Each organization must follow this format:
 
 ```json
 {
@@ -25,11 +23,7 @@ To add a new organization, use the "Add Your Space" button or modify the `src/da
   "province": "Milano",              // Province name (in Italian)
   "address": "Via Esempio 123",      // Full address
   "zipCode": "20123",               // ZIP code (5 digits)
-  "sectors": [                      // Array of sectors
-    "Coworking",
-    "Events",
-    "Education"
-  ],
+  "sector": "Hackerspace",          // See available sectors below
   "website": "https://example.com",  // Optional
   "email": "info@example.com",      // Optional
   "phone": "+39 02 1234567"         // Optional, with international prefix
@@ -43,27 +37,32 @@ To add a new organization, use the "Add Your Space" button or modify the `src/da
 - `Events`
 - `Permaculture`
 - `Web3`
-- `Local Projects`
-- `Inner Development`
+- `Local projects`
+- `Inner development`
 - `Education`
-- `Urban Garden`
-- `Open To Residences`
-- `Other`
-
-Organizations can belong to multiple sectors.
-
-### Filtering
-The map supports filtering by:
-- Region
-- Province
-- City
-- Multiple sectors
 
 ### Location Data
 - All location data (city, region, province) can be written in Italian
 - Addresses are automatically geocoded to coordinates
 - No need to manually find or input coordinates
 - The system will handle the conversion to map coordinates
+
+### Practical Example
+```json
+{
+  "id": "13",
+  "name": "FabLab Torino",
+  "city": "Torino",
+  "region": "Piemonte",
+  "province": "Torino",
+  "address": "Via Egeo 16",
+  "zipCode": "10134",
+  "sector": "Fablab",
+  "website": "https://fablabtorino.org",
+  "email": "info@fablabtorino.org",
+  "phone": "+39 011 1234567"
+}
+```
 
 ## Local Development
 
@@ -75,13 +74,6 @@ yarn install
 yarn dev
 ```
 
-## Environment Variables
-
-Create a `.env.local` file:
-```
-VITE_GITHUB_TOKEN=your_token_here
-```
-
 ## Technologies Used
 - React 18
 - TypeScript
@@ -89,6 +81,7 @@ VITE_GITHUB_TOKEN=your_token_here
 - Tailwind CSS (for styling)
 - Vite (build tool)
 - OpenStreetMap Geocoding
+- Node-geocoder
 
 ## Important Notes
 - Ensure the ID is unique
@@ -114,6 +107,13 @@ yarn dev
 
 # Build
 yarn build
+```
+
+## Environment
+
+Create `.env.local`:
+```
+VITE_GITHUB_TOKEN=your_token_here
 ```
 
 ## Deployment

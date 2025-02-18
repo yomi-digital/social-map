@@ -1,13 +1,10 @@
-const coordinatesCache = new Map<string, {lat: number, lng: number}>();
+// Funzione di utilità per aggiungere un delay
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Cache per le coordinate
+const coordinatesCache: Record<string, { lat: number; lng: number }> = {};
 
 export const getCoordinates = async (address: string, city: string, zipCode: string) => {
-  const cacheKey = `${address}-${city}-${zipCode}`;
-  
-  // Check cache first
-  if (coordinatesCache.has(cacheKey)) {
-    return coordinatesCache.get(cacheKey);
-  }
-
   try {
     const fullAddress = encodeURIComponent(`${address}, ${zipCode} ${city}, Italy`);
     const response = await fetch(
@@ -17,17 +14,26 @@ export const getCoordinates = async (address: string, city: string, zipCode: str
     const data = await response.json();
     
     if (data && data.length > 0) {
-      const coordinates = {
+      return {
         lat: parseFloat(data[0].lat),
         lng: parseFloat(data[0].lon)
       };
-      
-      // Cache the result
-      coordinatesCache.set(cacheKey, coordinates);
-      return coordinates;
     }
+
+    // Se non trova l'indirizzo completo, prova solo con la città
+    const cityResponse = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${city}, Italy`
+    );
     
-    console.error(`No coordinates found for address: ${fullAddress}`);
+    const cityData = await cityResponse.json();
+    
+    if (cityData && cityData.length > 0) {
+      return {
+        lat: parseFloat(cityData[0].lat),
+        lng: parseFloat(cityData[0].lon)
+      };
+    }
+
     return null;
   } catch (error) {
     console.error('Geocoding error:', error);

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
@@ -9,6 +9,7 @@ import L from 'leaflet';
 import { getCoordinates } from '../services/geocoding';
 
 // Fix per le icone di Leaflet
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // Crea un'icona personalizzata con il colore #00ffff
@@ -29,6 +30,18 @@ const customIcon = L.divIcon({
   popupAnchor: [0, -12]
 });
 
+// Fix per l'icona di default
+let DefaultIcon = L.icon({
+  iconUrl,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
 interface OrganizationWithCoordinates extends Organization {
   coordinates: {
     lat: number;
@@ -38,94 +51,53 @@ interface OrganizationWithCoordinates extends Organization {
 
 interface ItalyMapProps {
   organizations: Organization[];
-  selectedRegion?: string;
-  selectedProvince?: string;
-  selectedCity?: string;
 }
 
-// Componente per gestire lo zoom
-const ZoomHandler = ({ 
-  organizations, 
-  selectedRegion, 
-  selectedProvince, 
-  selectedCity 
-}: {
-  organizations: Organization[];
-  selectedRegion?: string;
-  selectedProvince?: string;
-  selectedCity?: string;
-}) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (selectedCity || selectedProvince || selectedRegion) {
-      const filteredOrgs = organizations.filter(org => {
-        if (selectedCity) return org.city === selectedCity;
-        if (selectedProvince) return org.province === selectedProvince;
-        if (selectedRegion) return org.region === selectedRegion;
-        return true;
-      });
-
-      if (filteredOrgs.length > 0 && filteredOrgs[0].coordinates) {
-        const bounds = L.latLngBounds(
-          filteredOrgs
-            .filter(org => org.coordinates)
-            .map(org => [org.coordinates!.lat, org.coordinates!.lng])
-        );
-        
-        // Aggiungi l'animazione di zoom
-        map.flyToBounds(bounds, {
-          padding: [50, 50],
-          duration: 1, // durata dell'animazione in secondi
-          easeLinearity: 0.5
-        });
-      }
-    } else {
-      // Reset alla vista dell'Italia con animazione
-      map.flyTo([41.9028, 12.4964], 6, {
-        duration: 1,
-        easeLinearity: 0.5
-      });
-    }
-  }, [map, selectedRegion, selectedProvince, selectedCity, organizations]);
-
-  return null;
-};
-
-const ItalyMap: React.FC<ItalyMapProps> = ({ 
-  organizations,
-  selectedRegion,
-  selectedProvince,
-  selectedCity
-}) => {
+const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [orgsWithCoordinates, setOrgsWithCoordinates] = useState<OrganizationWithCoordinates[]>([]);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
-      const orgsWithCoords = await Promise.all(
-        organizations.map(async (org) => {
-          if (org.coordinates) {
-            return org as OrganizationWithCoordinates;
-          }
+      try {
+        console.log('Fetching coordinates for organizations:', organizations);
+        
+        const orgsWithCoords = await Promise.all(
+          organizations.map(async (org) => {
+            if (org.coordinates) {
+              console.log('Using existing coordinates for:', org.name);
+              return org as OrganizationWithCoordinates;
+            }
 
-          const coords = await getCoordinates(org.address, org.city, org.zipCode);
-          if (coords) {
-            return {
-              ...org,
-              coordinates: coords
-            } as OrganizationWithCoordinates;
-          }
-          return null;
-        })
-      );
+            console.log('Fetching coordinates for:', org.name);
+            const coords = await getCoordinates(org.address, org.city, org.zipCode);
+            if (coords) {
+              console.log('Got coordinates for:', org.name, coords);
+              return {
+                ...org,
+                coordinates: coords
+              } as OrganizationWithCoordinates;
+            }
+            console.log('No coordinates found for:', org.name);
+            return null;
+          })
+        );
 
-      setOrgsWithCoordinates(orgsWithCoords.filter((org): org is OrganizationWithCoordinates => org !== null));
-      setIsLoading(false);
+        const validOrgs = orgsWithCoords.filter((org): org is OrganizationWithCoordinates => org !== null);
+        console.log('Organizations with valid coordinates:', validOrgs.length);
+        setOrgsWithCoordinates(validOrgs);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Error fetching coordinates:', err);
+        setError(err instanceof Error ? err.message : 'Error fetching coordinates');
+        setIsLoading(false);
+      }
     };
 
-    fetchCoordinates();
+    if (organizations.length > 0) {
+      fetchCoordinates();
+    }
   }, [organizations]);
 
   if (isLoading) {
@@ -134,6 +106,17 @@ const ItalyMap: React.FC<ItalyMapProps> = ({
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4">Caricamento mappa...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center text-red-500">
+          <p>Errore nel caricamento della mappa:</p>
+          <p>{error}</p>
         </div>
       </div>
     );
@@ -150,12 +133,6 @@ const ItalyMap: React.FC<ItalyMapProps> = ({
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <ZoomHandler 
-          organizations={organizations}
-          selectedRegion={selectedRegion}
-          selectedProvince={selectedProvince}
-          selectedCity={selectedCity}
         />
         <MarkerClusterGroup
           chunkedLoading
