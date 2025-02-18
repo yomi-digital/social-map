@@ -116,6 +116,19 @@
       "website": "",
       "email": "andreafolino.bm@gmail.com",
       "phone": ""
+    },
+    {
+      "id": "1739876800564",
+      "name": "ETHNA",
+      "city": "Catania",
+      "region": "Sicilia",
+      "province": "Catania",
+      "address": "Via Stramondo 22",
+      "zipCode": "95131",
+      "sector": "Events",
+      "website": "https://ethna.rocks",
+      "email": "lava@ethna.rocks",
+      "phone": ""
     }
   ]
 }
