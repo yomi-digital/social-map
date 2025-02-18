@@ -44,28 +44,30 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
       ...formData
     };
 
+    const filePath = 'src/data/organizations.json';
+    const branchName = `add-org-${id}`;
+
     try {
-      // 1. Ottieni il file
-      const currentFile = await githubService.getFile('src/data/organizations.json');
+      console.log('1. Fetching current file...');
+      const currentFile = await githubService.getFile(filePath);
       
-      // 2. Decodifica e aggiorna il contenuto
+      console.log('2. Decoding and updating content...');
       const currentContent = JSON.parse(atob(currentFile.content));
       currentContent.organizations.push(newOrganization);
       
-      // 3. Crea un nuovo branch
-      const branchName = `add-org-${id}`;
+      console.log('3. Creating new branch...');
       await githubService.createBranch(branchName, currentFile.sha);
       
-      // 4. Aggiorna il file
+      console.log('4. Updating file...');
       await githubService.updateFile(
-        'src/data/organizations.json',
+        filePath,
         JSON.stringify(currentContent, null, 2),
         `Add ${formData.name}`,
         branchName,
         currentFile.sha
       );
       
-      // 5. Crea la PR
+      console.log('5. Creating PR...');
       await githubService.createPR(
         `Add ${formData.name}`,
         `Add new organization: ${formData.name}\n\n\`\`\`json\n${JSON.stringify(newOrganization, null, 2)}\n\`\`\``,

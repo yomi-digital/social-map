@@ -4,6 +4,8 @@ import AddOrganizationForm from './components/AddOrganizationForm';
 import AddButton from './components/AddButton';
 import organizations from './data/organizations.json';
 
+console.log('VITE_GITHUB_TOKEN:', import.meta.env.VITE_GITHUB_TOKEN);
+
 function App() {
   const [orgs, setOrgs] = useState(organizations.organizations);
   const [isFormOpen, setIsFormOpen] = useState(false);
