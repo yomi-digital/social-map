@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect, useState, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
@@ -38,18 +38,69 @@ interface OrganizationWithCoordinates extends Organization {
 
 interface ItalyMapProps {
   organizations: Organization[];
+  selectedRegion?: string;
+  selectedProvince?: string;
+  selectedCity?: string;
 }
 
-const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
+// Componente per gestire lo zoom
+const ZoomHandler = ({ 
+  organizations, 
+  selectedRegion, 
+  selectedProvince, 
+  selectedCity 
+}: {
+  organizations: Organization[];
+  selectedRegion?: string;
+  selectedProvince?: string;
+  selectedCity?: string;
+}) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (selectedCity || selectedProvince || selectedRegion) {
+      const filteredOrgs = organizations.filter(org => {
+        if (selectedCity) return org.city === selectedCity;
+        if (selectedProvince) return org.province === selectedProvince;
+        if (selectedRegion) return org.region === selectedRegion;
+        return true;
+      });
+
+      if (filteredOrgs.length > 0 && filteredOrgs[0].coordinates) {
+        const bounds = L.latLngBounds(
+          filteredOrgs
+            .filter(org => org.coordinates)
+            .map(org => [org.coordinates!.lat, org.coordinates!.lng])
+        );
+        
+        // Aggiungi l'animazione di zoom
+        map.flyToBounds(bounds, {
+          padding: [50, 50],
+          duration: 1, // durata dell'animazione in secondi
+          easeLinearity: 0.5
+        });
+      }
+    } else {
+      // Reset alla vista dell'Italia con animazione
+      map.flyTo([41.9028, 12.4964], 6, {
+        duration: 1,
+        easeLinearity: 0.5
+      });
+    }
+  }, [map, selectedRegion, selectedProvince, selectedCity, organizations]);
+
+  return null;
+};
+
+const ItalyMap: React.FC<ItalyMapProps> = ({ 
+  organizations,
+  selectedRegion,
+  selectedProvince,
+  selectedCity
+}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [orgsWithCoordinates, setOrgsWithCoordinates] = useState<OrganizationWithCoordinates[]>([]);
-
-  useEffect(() => {
-    if (organizations.length > 0) {
-      setIsLoading(false);
-    }
-  }, [organizations]);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -71,6 +122,7 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
       );
 
       setOrgsWithCoordinates(orgsWithCoords.filter((org): org is OrganizationWithCoordinates => org !== null));
+      setIsLoading(false);
     };
 
     fetchCoordinates();
@@ -87,17 +139,6 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center text-red-500">
-          <p>Errore nel caricamento della mappa:</p>
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="h-full w-full">
       <MapContainer
@@ -109,6 +150,12 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <ZoomHandler 
+          organizations={organizations}
+          selectedRegion={selectedRegion}
+          selectedProvince={selectedProvince}
+          selectedCity={selectedCity}
         />
         <MarkerClusterGroup
           chunkedLoading

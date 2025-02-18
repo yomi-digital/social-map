@@ -1,3 +1,7 @@
+export type Sector = 'Hackerspace' | 'Coworking' | 'Fablab' | 'Events' | 'Permaculture' | 
+                    'Web3' | 'Local Projects' | 'Inner Development' | 'Education' | 
+                    'Urban Garden' | 'Open To Residences' | 'Other';
+
 export interface Organization {
   id: string;
   name: string;
@@ -6,7 +10,7 @@ export interface Organization {
   province: string;
   address: string;
   zipCode: string;
-  sector: 'Hackerspace' | 'Coworking' | 'Fablab' | 'Events' | 'Permaculture' | 'Web3' | 'Local projects' | 'Inner development' | 'Education';
+  sectors: Sector[];
   website?: string;
   email?: string;
   phone?: string;

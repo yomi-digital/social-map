@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Organization } from '../types/Organization';
 import { githubService } from '../services/github';
-
-type Sector = Organization['sector'];
+import { Sector } from '../types/Organization';
 
 const SECTORS: Sector[] = [
   'Hackerspace',
@@ -11,9 +10,12 @@ const SECTORS: Sector[] = [
   'Events',
   'Permaculture',
   'Web3',
-  'Local projects',
-  'Inner development',
-  'Education'
+  'Local Projects',
+  'Inner Development',
+  'Education',
+  'Urban Garden',
+  'Open To Residences',
+  'Other'
 ];
 
 interface AddOrganizationFormProps {
@@ -30,7 +32,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
     province: '',
     address: '',
     zipCode: '',
-    sector: '' as Sector,
+    sectors: [] as Sector[],
     website: '',
     email: '',
     phone: ''
@@ -171,18 +173,26 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Settore</label>
-                <select
-                  required
-                  value={formData.sector}
-                  onChange={(e) => setFormData({...formData, sector: e.target.value as Sector})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                >
-                  <option value="">Seleziona un settore</option>
+                <label className="block text-sm font-medium text-gray-700">Sectors</label>
+                <div className="mt-2 space-y-2 max-h-48 overflow-y-auto p-2 border rounded-md">
                   {SECTORS.map(sector => (
-                    <option key={sector} value={sector}>{sector}</option>
+                    <label key={sector} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={formData.sectors.includes(sector)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({...formData, sectors: [...formData.sectors, sector]});
+                          } else {
+                            setFormData({...formData, sectors: formData.sectors.filter(s => s !== sector)});
+                          }
+                        }}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">{sector}</span>
+                    </label>
                   ))}
-                </select>
+                </div>
               </div>
               
               <div>
