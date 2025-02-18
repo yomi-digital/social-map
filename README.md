@@ -96,20 +96,22 @@ yarn dev
 
 Una mappa interattiva delle organizzazioni sociali in Italia.
 
-## Setup Locale
+## Setup
 
 ```bash
-# Installa le dipendenze
+# Install
 yarn install
 
-# Avvia il server di sviluppo
+# Development
 yarn dev
+
+# Build
+yarn build
 ```
 
-## Variabili d'Ambiente
+## Environment
 
-Crea un file `.env.local` con:
-
+Create `.env.local`:
 ```
 VITE_GITHUB_TOKEN=your_token_here
 ```

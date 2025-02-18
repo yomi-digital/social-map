@@ -3,19 +3,27 @@ const owner = 'yomi-digital';
 const repo = 'social-map';
 const baseUrl = 'https://api.github.com';
 
-// Aggiungi più logging per il debug in produzione
-console.log('Environment:', {
-  isDevelopment: import.meta.env.DEV,
-  isProduction: import.meta.env.PROD,
-  mode: import.meta.env.MODE,
-  baseUrl: import.meta.env.BASE_URL,
-  hasToken: !!token
+// Logging dettagliato all'inizializzazione
+console.log('GitHub Service Initialization:', {
+  environment: {
+    isDev: import.meta.env.DEV,
+    isProd: import.meta.env.PROD,
+    mode: import.meta.env.MODE,
+    baseUrl: import.meta.env.BASE_URL,
+  },
+  config: {
+    owner,
+    repo,
+    hasToken: !!token,
+    tokenFirstChars: token ? token.substring(0, 4) : 'none',
+  }
 });
 
 if (!token) {
   console.error('Token non trovato. Variabili ambiente:', {
     importMetaEnv: import.meta.env,
-    processEnv: process.env
+    processEnv: process.env,
+    tokenValue: token
   });
   throw new Error('GitHub token non trovato! Controlla le variabili d\'ambiente in produzione.');
 }
@@ -26,13 +34,37 @@ const headers = {
   'X-GitHub-Api-Version': '2022-11-28'
 };
 
+// Aggiungi una funzione di test all'avvio
+async function testGitHubConnection() {
+  try {
+    const response = await fetch(`${baseUrl}/repos/${owner}/${repo}`, { headers });
+    const data = await response.json();
+    console.log('GitHub Connection Test:', {
+      success: response.ok,
+      status: response.status,
+      data: data,
+      headers: Object.fromEntries(response.headers.entries())
+    });
+    return response.ok;
+  } catch (error) {
+    console.error('GitHub Connection Test Failed:', error);
+    return false;
+  }
+}
+
+// Esegui il test all'avvio
+testGitHubConnection();
+
 export const githubService = {
   async getFile(path: string) {
     const url = `${baseUrl}/repos/${owner}/${repo}/contents/${path}`;
     console.log('Fetching file from:', url);
     
     try {
-      const response = await fetch(url, { headers });
+      const response = await fetch(url, { 
+        headers,
+        cache: 'no-store' // Forza il bypass della cache
+      });
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -150,24 +182,4 @@ export const githubService = {
     }
     return response.json();
   }
-};
-
-// Aggiungi questo metodo per testare l'accesso
-async function testGitHubAccess() {
-  try {
-    const response = await fetch(`${baseUrl}/repos/${owner}/${repo}`, { headers });
-    const data = await response.json();
-    console.log('GitHub Repository Access Test:', {
-      success: response.ok,
-      status: response.status,
-      repoData: data
-    });
-    return response.ok;
-  } catch (error) {
-    console.error('GitHub Access Test Failed:', error);
-    return false;
-  }
-}
-
-// Chiama il test all'avvio
-testGitHubAccess(); 
+}; 

@@ -19,9 +19,10 @@ const SECTORS: Sector[] = [
 interface AddOrganizationFormProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmitSuccess: () => void;
 }
 
-const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
+const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizationFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     city: '',
@@ -76,6 +77,7 @@ const AddOrganizationForm = ({ isOpen, onClose }: AddOrganizationFormProps) => {
 
       alert('Pull Request creata con successo! Grazie per il contributo.');
       onClose();
+      onSubmitSuccess();
     } catch (error) {
       console.error('Error:', error);
       alert(`Si è verificato un errore: ${error instanceof Error ? error.message : 'Errore sconosciuto'}`);

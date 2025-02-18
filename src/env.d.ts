@@ -2,7 +2,10 @@
 
 interface ImportMetaEnv {
   readonly VITE_GITHUB_TOKEN: string
-  // altre variabili d'ambiente se necessarie
+  readonly DEV: boolean
+  readonly PROD: boolean
+  readonly MODE: string
+  readonly BASE_URL: string
 }
 
 interface ImportMeta {

@@ -6,11 +6,14 @@
     }
   ],
   "env": {
-    "VITE_GITHUB_TOKEN": "@vite_github_token"
+    "VITE_GITHUB_TOKEN": "@github_token"
   },
   "build": {
     "env": {
-      "VITE_GITHUB_TOKEN": "@vite_github_token"
+      "VITE_GITHUB_TOKEN": "@github_token"
     }
+  },
+  "github": {
+    "silent": true
   }
 } 
