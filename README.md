@@ -1,58 +1,69 @@
-# Mappa delle Organizzazioni Italiane
+# Italian Innovation Map
 
-Una mappa interattiva che mostra la distribuzione delle organizzazioni sociali, culturali ed educative in Italia.
+An interactive map showing the distribution of innovation spaces, coworking, and educational initiatives across Italy.
 
-## Caratteristiche
-- Visualizzazione delle organizzazioni su mappa
-- Clustering automatico dei marker per aree densamente popolate
-- Popup informativi per ogni organizzazione
-- Filtro visivo per una migliore visualizzazione della mappa
+## Features
+- Interactive map visualization
+- Automatic marker clustering for dense areas
+- Detailed information popups
+- Visual filtering for better map readability
 
-## Come Aggiungere un'Organizzazione
+## How to Add an Organization
 
-Per aggiungere una nuova organizzazione, modifica il file `src/data/organizations.json`. Ogni organizzazione deve seguire questo formato:
+To add a new organization, modify the `src/data/organizations.json` file. Each organization must follow this format:
 
 ```json
 {
-  "id": "13",                        // Identificativo univoco
-  "name": "Nome Organizzazione",     // Nome completo dell'organizzazione
-  "city": "Nome Città",              // Città sede dell'organizzazione
-  "region": "Nome Regione",          // Regione di appartenenza
-  "province": "Sigla Provincia",     // Provincia di appartenenza
-  "address": "Via Roma 1",           // Indirizzo completo
-  "cap": "00100",                    // Codice di Avviamento Postale
-  "sector": "Sociale",               // Settore di attività
+  "id": "13",                        // Unique identifier
+  "name": "Organization Name",       // Full name
+  "city": "Milan",                  // City name in English
+  "region": "Lombardy",             // Region name in English
+  "province": "Milan",              // Province name in English
+  "address": "Via Example 123",     // Full address
+  "zipCode": "20123",              // ZIP code
+  "sector": "Hackerspace",         // See available sectors
+  "website": "https://example.com", // Optional
+  "email": "info@example.com",     // Optional
+  "phone": "+39 02 1234567",       // Optional
   "coordinates": {
-    "lat": 41.9028,                 // Latitudine
-    "lng": 12.4964                  // Longitudine
+    "lat": 45.4642,                // Latitude
+    "lng": 9.1900                  // Longitude
   }
 }
 ```
 
-### Settori Disponibili
-- `Sociale`
-- `Culturale`
-- `Educativo`
-- `Ambientale`
+### Available Sectors
+- `Hackerspace`
+- `Coworking`
+- `Fablab`
+- `Events`
+- `Permaculture`
+- `Web3`
+- `Local projects`
+- `Inner development`
+- `Education`
 
-### Come Trovare le Coordinate
-1. Vai su [Google Maps](https://www.google.com/maps)
-2. Cerca l'indirizzo dell'organizzazione
-3. Fai click destro sul punto esatto
-4. Seleziona "Che cosa c'è qui?"
-5. Le coordinate appariranno in basso (prima la latitudine, poi la longitudine)
+### How to Find Coordinates
+1. Go to [Google Maps](https://www.google.com/maps)
+2. Search for the organization's address
+3. Right-click on the exact location
+4. Select "What's here?"
+5. The coordinates will appear at the bottom (latitude, longitude)
 
-### Esempio Pratico
+### Practical Example
 ```json
 {
   "id": "13",
-  "name": "Associazione Esempio",
-  "city": "Milano",
-  "region": "Lombardia",
-  "province": "Milano",
-  "address": "Via Esempio 123",
-  "cap": "20123",
-  "sector": "Sociale",
+  "name": "Milan Hackerspace",
+  "city": "Milan",
+  "region": "Lombardy",
+  "province": "Milan",
+  "address": "Via Innovation 42",
+  "zipCode": "20123",
+  "sector": "Hackerspace",
+  "website": "https://hackerspace.example.com",
+  "email": "info@hackerspace.example.com",
+  "phone": "+39 02 1234567",
   "coordinates": {
     "lat": 45.4642,
     "lng": 9.1900
@@ -60,25 +71,27 @@ Per aggiungere una nuova organizzazione, modifica il file `src/data/organization
 }
 ```
 
-## Sviluppo Locale
+## Local Development
 
 ```bash
-# Installa le dipendenze
+# Install dependencies
 yarn install
 
-# Avvia il server di sviluppo
+# Start development server
 yarn dev
 ```
 
-## Tecnologie Utilizzate
+## Technologies Used
 - React 18
 - TypeScript
-- Leaflet (per la mappa)
-- Tailwind CSS (per lo stile)
+- Leaflet (for mapping)
+- Tailwind CSS (for styling)
 - Vite (build tool)
 
-## Note Importanti
-- Assicurati che l'ID sia univoco
-- Le coordinate devono essere precise per un corretto posizionamento
-- Il CAP deve essere nel formato corretto (5 cifre)
-- Mantieni la consistenza nei nomi delle regioni e province
+## Important Notes
+- Ensure the ID is unique
+- Coordinates must be precise for correct positioning
+- ZIP code must be in the correct format (5 digits)
+- Maintain consistency in region and province names (use English names)
+- All URLs should include `https://` or `http://`
+- Phone numbers should include international prefix

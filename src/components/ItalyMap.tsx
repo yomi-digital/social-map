@@ -64,10 +64,42 @@ const ItalyMap = ({ organizations }: ItalyMapProps) => {
               icon={customIcon}
             >
               <Popup>
-                <div>
-                  <h3 className="font-bold">{org.name}</h3>
-                  <p>{org.city}, {org.province}</p>
-                  <p>Settore: {org.sector}</p>
+                <div className="min-w-[250px]">
+                  <h3 className="font-bold text-lg mb-2">{org.name}</h3>
+                  <p className="text-gray-700">{org.address}</p>
+                  <p className="text-gray-700 mb-2">{org.zipCode} - {org.city} ({org.province})</p>
+                  <p className="text-gray-600 mb-1">
+                    <span className="font-semibold">Region:</span> {org.region}
+                  </p>
+                  <p className="text-gray-600 mb-3">
+                    <span className="font-semibold">Sector:</span> {org.sector}
+                  </p>
+                  {(org.website || org.email || org.phone) && (
+                    <div className="border-t pt-2">
+                      {org.website && (
+                        <p className="text-sm">
+                          <a href={org.website} target="_blank" rel="noopener noreferrer" 
+                             className="text-blue-600 hover:underline">
+                            Website
+                          </a>
+                        </p>
+                      )}
+                      {org.email && (
+                        <p className="text-sm">
+                          <a href={`mailto:${org.email}`} className="text-blue-600 hover:underline">
+                            {org.email}
+                          </a>
+                        </p>
+                      )}
+                      {org.phone && (
+                        <p className="text-sm">
+                          <a href={`tel:${org.phone}`} className="text-blue-600 hover:underline">
+                            {org.phone}
+                          </a>
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Popup>
             </Marker>

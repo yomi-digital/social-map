@@ -2,170 +2,121 @@
   "organizations": [
     {
       "id": "1",
-      "name": "Cooperativa Sociale Alpha",
-      "city": "Milano",
-      "region": "Lombardia",
-      "province": "Milano",
-      "address": "Via Torino 45",
-      "cap": "20123",
-      "sector": "Sociale",
+      "name": "Milan Hackerspace",
+      "city": "Milan",
+      "region": "Lombardy",
+      "province": "Milan",
+      "address": "Via Tortona 56",
+      "zipCode": "20144",
+      "sector": "Hackerspace",
+      "website": "https://hackerspaces.org/milan",
+      "email": "info@milanhackerspace.org",
+      "phone": "+39 02 1234567",
       "coordinates": {
-        "lat": 45.4642,
-        "lng": 9.1900
+        "lat": 45.4515,
+        "lng": 9.1628
       }
     },
     {
       "id": "2",
-      "name": "Associazione Beta",
-      "city": "Roma",
+      "name": "Impact Hub Roma",
+      "city": "Rome",
       "region": "Lazio",
-      "province": "Roma",
-      "address": "Via del Corso 303",
-      "cap": "00186",
-      "sector": "Culturale",
+      "province": "Rome",
+      "address": "Via Palermo 41",
+      "zipCode": "00184",
+      "sector": "Coworking",
+      "website": "https://rome.impacthub.net",
+      "email": "rome@impacthub.net",
+      "phone": "+39 06 9876543",
       "coordinates": {
-        "lat": 41.9028,
-        "lng": 12.4964
+        "lat": 41.8987,
+        "lng": 12.4921
       }
     },
     {
       "id": "3",
-      "name": "Associazione Gamma",
-      "city": "Napoli",
+      "name": "Naples Fablab",
+      "city": "Naples",
       "region": "Campania",
-      "province": "Napoli",
-      "address": "Via Toledo 28",
-      "cap": "80134",
-      "sector": "Sociale",
+      "province": "Naples",
+      "address": "Via San Biagio dei Librai 39",
+      "zipCode": "80138",
+      "sector": "Fablab",
+      "website": "https://fablabnapoli.it",
+      "email": "make@fablabnapoli.it",
+      "phone": "+39 081 5557890",
       "coordinates": {
-        "lat": 40.8518,
-        "lng": 14.2681
+        "lat": 40.8505,
+        "lng": 14.2577
       }
     },
     {
       "id": "4",
-      "name": "Centro Culturale Delta",
-      "city": "Milano",
-      "region": "Lombardia",
-      "province": "Milano",
-      "address": "Corso Buenos Aires 15",
-      "cap": "20124",
-      "sector": "Culturale",
+      "name": "Talent Garden Calabiana",
+      "city": "Milan",
+      "region": "Lombardy",
+      "province": "Milan",
+      "address": "Via Arcivescovo Calabiana 6",
+      "zipCode": "20139",
+      "sector": "Coworking",
+      "website": "https://talentgarden.org/milan",
+      "email": "milano@talentgarden.it",
+      "phone": "+39 02 8976543",
       "coordinates": {
-        "lat": 45.4785,
-        "lng": 9.2106
+        "lat": 45.4479,
+        "lng": 9.2075
       }
     },
     {
       "id": "5",
-      "name": "Fondazione Epsilon",
-      "city": "Roma",
+      "name": "Web3 Roma Hub",
+      "city": "Rome",
       "region": "Lazio",
-      "province": "Roma",
-      "address": "Via Veneto 89",
-      "cap": "00187",
-      "sector": "Educativo",
+      "province": "Rome",
+      "address": "Via dei Serpenti 170",
+      "zipCode": "00184",
+      "sector": "Web3",
+      "website": "https://web3hub.roma.it",
+      "email": "contact@web3hub.roma.it",
+      "phone": "+39 06 7654321",
       "coordinates": {
-        "lat": 41.9067,
-        "lng": 12.4885
+        "lat": 41.8958,
+        "lng": 12.4900
       }
     },
     {
       "id": "6",
-      "name": "Cooperativa Zeta",
-      "city": "Napoli",
-      "region": "Campania",
-      "province": "Napoli",
-      "address": "Via Chiaia 142",
-      "cap": "80121",
-      "sector": "Ambientale",
+      "name": "Permaculture Learning Center",
+      "city": "Florence",
+      "region": "Tuscany",
+      "province": "Florence",
+      "address": "Via delle Cascine 33",
+      "zipCode": "50144",
+      "sector": "Permaculture",
+      "website": "https://permaculture.florence.it",
+      "email": "learn@permaculture.florence.it",
+      "phone": "+39 055 123456",
       "coordinates": {
-        "lat": 40.8379,
-        "lng": 14.2471
+        "lat": 43.7826,
+        "lng": 11.2228
       }
     },
     {
       "id": "7",
-      "name": "Associazione Eta",
-      "city": "Milano",
-      "region": "Lombardia",
-      "province": "Milano",
-      "address": "Via Paolo Sarpi 30",
-      "cap": "20154",
-      "sector": "Sociale",
+      "name": "Inner Growth Space",
+      "city": "Bologna",
+      "region": "Emilia-Romagna",
+      "province": "Bologna",
+      "address": "Via del Pratello 90",
+      "zipCode": "40122",
+      "sector": "Inner development",
+      "website": "https://innergrowth.bologna.it",
+      "email": "info@innergrowth.bologna.it",
+      "phone": "+39 051 987654",
       "coordinates": {
-        "lat": 45.4853,
-        "lng": 9.1757
-      }
-    },
-    {
-      "id": "8",
-      "name": "Fondazione Theta",
-      "city": "Roma",
-      "region": "Lazio",
-      "province": "Roma",
-      "address": "Via Nazionale 200",
-      "cap": "00184",
-      "sector": "Culturale",
-      "coordinates": {
-        "lat": 41.8999,
-        "lng": 12.4934
-      }
-    },
-    {
-      "id": "9",
-      "name": "Centro Iota",
-      "city": "Napoli",
-      "region": "Campania",
-      "province": "Napoli",
-      "address": "Corso Umberto I 35",
-      "cap": "80138",
-      "sector": "Educativo",
-      "coordinates": {
-        "lat": 40.8470,
-        "lng": 14.2629
-      }
-    },
-    {
-      "id": "10",
-      "name": "Cooperativa Kappa",
-      "city": "Milano",
-      "region": "Lombardia",
-      "province": "Milano",
-      "address": "Corso Sempione 78",
-      "cap": "20154",
-      "sector": "Ambientale",
-      "coordinates": {
-        "lat": 45.4832,
-        "lng": 9.1689
-      }
-    },
-    {
-      "id": "11",
-      "name": "Associazione Lambda",
-      "city": "Roma",
-      "region": "Lazio",
-      "province": "Roma",
-      "address": "Via Appia Nuova 123",
-      "cap": "00183",
-      "sector": "Sociale",
-      "coordinates": {
-        "lat": 41.8850,
-        "lng": 12.5088
-      }
-    },
-    {
-      "id": "12",
-      "name": "Centro Mu",
-      "city": "Napoli",
-      "region": "Campania",
-      "province": "Napoli",
-      "address": "Via Duomo 147",
-      "cap": "80138",
-      "sector": "Culturale",
-      "coordinates": {
-        "lat": 40.8531,
-        "lng": 14.2583
+        "lat": 44.4949,
+        "lng": 11.3426
       }
     }
   ]
