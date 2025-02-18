@@ -40,9 +40,16 @@ interface ItalyMapProps {
   organizations: Organization[];
 }
 
-const ItalyMap = ({ organizations }: ItalyMapProps) => {
+const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [orgsWithCoordinates, setOrgsWithCoordinates] = useState<OrganizationWithCoordinates[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (organizations.length > 0) {
+      setIsLoading(false);
+    }
+  }, [organizations]);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -64,22 +71,37 @@ const ItalyMap = ({ organizations }: ItalyMapProps) => {
       );
 
       setOrgsWithCoordinates(orgsWithCoords.filter((org): org is OrganizationWithCoordinates => org !== null));
-      setLoading(false);
     };
 
     fetchCoordinates();
   }, [organizations]);
 
-  if (loading) {
-    return <div>Loading map...</div>;
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4">Caricamento mappa...</p>
+        </div>
+      </div>
+    );
   }
 
-  const defaultPosition: [number, number] = [41.9028, 12.4964]; // Centro Italia (Roma)
+  if (error) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center text-red-500">
+          <p>Errore nel caricamento della mappa:</p>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full w-full">
       <MapContainer
-        center={defaultPosition}
+        center={[41.9028, 12.4964]}
         zoom={6}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}

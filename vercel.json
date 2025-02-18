@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_GITHUB_TOKEN": "@vite_github_token"
+  },
+  "build": {
+    "env": {
+      "VITE_GITHUB_TOKEN": "@vite_github_token"
+    }
+  }
+} 

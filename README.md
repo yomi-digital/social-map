@@ -91,3 +91,38 @@ yarn dev
 - Phone numbers should include international prefix (+39 for Italy)
 - Addresses are automatically converted to coordinates
 - The system uses OpenStreetMap for geocoding (no API key needed)
+
+# Social Map
+
+Una mappa interattiva delle organizzazioni sociali in Italia.
+
+## Setup Locale
+
+```bash
+# Installa le dipendenze
+yarn install
+
+# Avvia il server di sviluppo
+yarn dev
+```
+
+## Variabili d'Ambiente
+
+Crea un file `.env.local` con:
+
+```
+VITE_GITHUB_TOKEN=your_token_here
+```
+
+## Deployment
+
+1. Configura le variabili d'ambiente su Vercel:
+   - VITE_GITHUB_TOKEN
+
+2. Collega il repository a Vercel
+
+3. Deploy:
+```bash
+yarn build
+vercel --prod
+```
