@@ -10,7 +10,7 @@ export interface Organization {
   website?: string;
   email?: string;
   phone?: string;
-  coordinates: {
+  coordinates?: {
     lat: number;
     lng: number;
   };

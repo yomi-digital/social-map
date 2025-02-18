@@ -2,37 +2,29 @@
   "organizations": [
     {
       "id": "1",
-      "name": "Milan Hackerspace",
-      "city": "Milan",
-      "region": "Lombardy",
-      "province": "Milan",
+      "name": "Spazio Hacker Milano",
+      "city": "Milano",
+      "region": "Lombardia",
+      "province": "Milano",
       "address": "Via Tortona 56",
       "zipCode": "20144",
       "sector": "Hackerspace",
       "website": "https://hackerspaces.org/milan",
       "email": "info@milanhackerspace.org",
-      "phone": "+39 02 1234567",
-      "coordinates": {
-        "lat": 45.4515,
-        "lng": 9.1628
-      }
+      "phone": "+39 02 1234567"
     },
     {
       "id": "2",
       "name": "Impact Hub Roma",
-      "city": "Rome",
+      "city": "Roma",
       "region": "Lazio",
-      "province": "Rome",
+      "province": "Roma",
       "address": "Via Palermo 41",
       "zipCode": "00184",
       "sector": "Coworking",
       "website": "https://rome.impacthub.net",
       "email": "rome@impacthub.net",
-      "phone": "+39 06 9876543",
-      "coordinates": {
-        "lat": 41.8987,
-        "lng": 12.4921
-      }
+      "phone": "+39 06 9876543"
     },
     {
       "id": "3",
@@ -45,11 +37,7 @@
       "sector": "Fablab",
       "website": "https://fablabnapoli.it",
       "email": "make@fablabnapoli.it",
-      "phone": "+39 081 5557890",
-      "coordinates": {
-        "lat": 40.8505,
-        "lng": 14.2577
-      }
+      "phone": "+39 081 5557890"
     },
     {
       "id": "4",
@@ -62,11 +50,7 @@
       "sector": "Coworking",
       "website": "https://talentgarden.org/milan",
       "email": "milano@talentgarden.it",
-      "phone": "+39 02 8976543",
-      "coordinates": {
-        "lat": 45.4479,
-        "lng": 9.2075
-      }
+      "phone": "+39 02 8976543"
     },
     {
       "id": "5",
@@ -79,11 +63,7 @@
       "sector": "Web3",
       "website": "https://web3hub.roma.it",
       "email": "contact@web3hub.roma.it",
-      "phone": "+39 06 7654321",
-      "coordinates": {
-        "lat": 41.8958,
-        "lng": 12.4900
-      }
+      "phone": "+39 06 7654321"
     },
     {
       "id": "6",
@@ -96,11 +76,7 @@
       "sector": "Permaculture",
       "website": "https://permaculture.florence.it",
       "email": "learn@permaculture.florence.it",
-      "phone": "+39 055 123456",
-      "coordinates": {
-        "lat": 43.7826,
-        "lng": 11.2228
-      }
+      "phone": "+39 055 123456"
     },
     {
       "id": "7",
@@ -113,11 +89,7 @@
       "sector": "Inner development",
       "website": "https://innergrowth.bologna.it",
       "email": "info@innergrowth.bologna.it",
-      "phone": "+39 051 987654",
-      "coordinates": {
-        "lat": 44.4949,
-        "lng": 11.3426
-      }
+      "phone": "+39 051 987654"
     }
   ]
 } 

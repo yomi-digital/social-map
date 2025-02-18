@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import 'leaflet/dist/leaflet.css';
@@ -6,6 +6,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { Organization } from '../types/Organization';
 import L from 'leaflet';
+import { getCoordinates } from '../services/geocoding';
 
 // Fix per le icone di Leaflet
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -28,11 +29,51 @@ const customIcon = L.divIcon({
   popupAnchor: [0, -12]
 });
 
+interface OrganizationWithCoordinates extends Organization {
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+}
+
 interface ItalyMapProps {
   organizations: Organization[];
 }
 
 const ItalyMap = ({ organizations }: ItalyMapProps) => {
+  const [orgsWithCoordinates, setOrgsWithCoordinates] = useState<OrganizationWithCoordinates[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      const orgsWithCoords = await Promise.all(
+        organizations.map(async (org) => {
+          if (org.coordinates) {
+            return org as OrganizationWithCoordinates;
+          }
+
+          const coords = await getCoordinates(org.address, org.city, org.zipCode);
+          if (coords) {
+            return {
+              ...org,
+              coordinates: coords
+            } as OrganizationWithCoordinates;
+          }
+          return null;
+        })
+      );
+
+      setOrgsWithCoordinates(orgsWithCoords.filter((org): org is OrganizationWithCoordinates => org !== null));
+      setLoading(false);
+    };
+
+    fetchCoordinates();
+  }, [organizations]);
+
+  if (loading) {
+    return <div>Loading map...</div>;
+  }
+
   const defaultPosition: [number, number] = [41.9028, 12.4964]; // Centro Italia (Roma)
 
   return (
@@ -57,7 +98,7 @@ const ItalyMap = ({ organizations }: ItalyMapProps) => {
             });
           }}
         >
-          {organizations.map((org) => (
+          {orgsWithCoordinates.map((org) => (
             <Marker
               key={org.id}
               position={[org.coordinates.lat, org.coordinates.lng]}

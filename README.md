@@ -7,6 +7,8 @@ An interactive map showing the distribution of innovation spaces, coworking, and
 - Automatic marker clustering for dense areas
 - Detailed information popups
 - Visual filtering for better map readability
+- Automatic geocoding from addresses
+- Support for Italian location names
 
 ## How to Add an Organization
 
@@ -15,20 +17,16 @@ To add a new organization, modify the `src/data/organizations.json` file. Each o
 ```json
 {
   "id": "13",                        // Unique identifier
-  "name": "Organization Name",       // Full name
-  "city": "Milan",                  // City name in English
-  "region": "Lombardy",             // Region name in English
-  "province": "Milan",              // Province name in English
-  "address": "Via Example 123",     // Full address
-  "zipCode": "20123",              // ZIP code
-  "sector": "Hackerspace",         // See available sectors
-  "website": "https://example.com", // Optional
-  "email": "info@example.com",     // Optional
-  "phone": "+39 02 1234567",       // Optional
-  "coordinates": {
-    "lat": 45.4642,                // Latitude
-    "lng": 9.1900                  // Longitude
-  }
+  "name": "Spazio Innovazione",      // Name (can be in Italian)
+  "city": "Milano",                  // City name (in Italian)
+  "region": "Lombardia",             // Region name (in Italian)
+  "province": "Milano",              // Province name (in Italian)
+  "address": "Via Esempio 123",      // Full address
+  "zipCode": "20123",               // ZIP code (5 digits)
+  "sector": "Hackerspace",          // See available sectors below
+  "website": "https://example.com",  // Optional
+  "email": "info@example.com",      // Optional
+  "phone": "+39 02 1234567"         // Optional, with international prefix
 }
 ```
 
@@ -43,31 +41,26 @@ To add a new organization, modify the `src/data/organizations.json` file. Each o
 - `Inner development`
 - `Education`
 
-### How to Find Coordinates
-1. Go to [Google Maps](https://www.google.com/maps)
-2. Search for the organization's address
-3. Right-click on the exact location
-4. Select "What's here?"
-5. The coordinates will appear at the bottom (latitude, longitude)
+### Location Data
+- All location data (city, region, province) can be written in Italian
+- Addresses are automatically geocoded to coordinates
+- No need to manually find or input coordinates
+- The system will handle the conversion to map coordinates
 
 ### Practical Example
 ```json
 {
   "id": "13",
-  "name": "Milan Hackerspace",
-  "city": "Milan",
-  "region": "Lombardy",
-  "province": "Milan",
-  "address": "Via Innovation 42",
-  "zipCode": "20123",
-  "sector": "Hackerspace",
-  "website": "https://hackerspace.example.com",
-  "email": "info@hackerspace.example.com",
-  "phone": "+39 02 1234567",
-  "coordinates": {
-    "lat": 45.4642,
-    "lng": 9.1900
-  }
+  "name": "FabLab Torino",
+  "city": "Torino",
+  "region": "Piemonte",
+  "province": "Torino",
+  "address": "Via Egeo 16",
+  "zipCode": "10134",
+  "sector": "Fablab",
+  "website": "https://fablabtorino.org",
+  "email": "info@fablabtorino.org",
+  "phone": "+39 011 1234567"
 }
 ```
 
@@ -87,11 +80,14 @@ yarn dev
 - Leaflet (for mapping)
 - Tailwind CSS (for styling)
 - Vite (build tool)
+- OpenStreetMap Geocoding
+- Node-geocoder
 
 ## Important Notes
 - Ensure the ID is unique
-- Coordinates must be precise for correct positioning
 - ZIP code must be in the correct format (5 digits)
-- Maintain consistency in region and province names (use English names)
+- Location names can be in Italian
 - All URLs should include `https://` or `http://`
-- Phone numbers should include international prefix
+- Phone numbers should include international prefix (+39 for Italy)
+- Addresses are automatically converted to coordinates
+- The system uses OpenStreetMap for geocoding (no API key needed)
