@@ -27,5 +27,6 @@ yarn-error.log*
 # System
 .DS_Store
 
+# Node Modules
 node_modules/
 node_modules_2/
