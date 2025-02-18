@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => {
       'process.env.NODE_ENV': JSON.stringify(mode)
     },
     build: {
+      outDir: 'dist',
       sourcemap: true,  // Per debug in produzione
       rollupOptions: {
         output: {

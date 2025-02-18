@@ -1,4 +1,8 @@
 {
+  "framework": "vite",
+  "buildCommand": "yarn build",
+  "devCommand": "yarn dev",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/(.*)",
@@ -8,22 +12,8 @@
   "env": {
     "VITE_GITHUB_TOKEN": "@github_token"
   },
-  "build": {
-    "env": {
-      "VITE_GITHUB_TOKEN": "@github_token"
-    }
-  },
   "github": {
     "silent": true,
     "autoAlias": true
-  },
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/node",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
-    }
-  ]
+  }
 } 
