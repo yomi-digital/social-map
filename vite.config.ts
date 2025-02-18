@@ -8,4 +8,6 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  envDir: './',
+  envPrefix: 'VITE_'
 }) 

@@ -1,21 +1,15 @@
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-const REPO_OWNER = 'liviolombardo';
-const REPO_NAME = 'social-map';
-const BASE_URL = 'https://api.github.com';
+import config from '../config/github';
 
 const headers = {
-  'Authorization': `token ${GITHUB_TOKEN}`,
+  'Authorization': `token ${config.token}`,
   'Accept': 'application/vnd.github.v3+json',
   'X-GitHub-Api-Version': '2022-11-28'
 };
 
 export const githubService = {
   async getFile(path: string) {
-    console.log('Token:', GITHUB_TOKEN);
-    console.log('Headers:', headers);
-    
     const response = await fetch(
-      `${BASE_URL}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`,
+      `${config.baseUrl}/repos/${config.owner}/${config.repo}/contents/${path}`,
       { headers }
     );
     
@@ -29,7 +23,7 @@ export const githubService = {
 
   async createBranch(branchName: string, sha: string) {
     const response = await fetch(
-      `${BASE_URL}/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`,
+      `${config.baseUrl}/repos/${config.owner}/${config.repo}/git/refs`,
       {
         method: 'POST',
         headers: { ...headers, 'Content-Type': 'application/json' },
@@ -40,14 +34,15 @@ export const githubService = {
       }
     );
     if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`GitHub API error: ${response.status} ${response.statusText}\n${errorText}`);
     }
     return response.json();
   },
 
   async updateFile(path: string, content: string, message: string, branch: string, sha: string) {
     const response = await fetch(
-      `${BASE_URL}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`,
+      `${config.baseUrl}/repos/${config.owner}/${config.repo}/contents/${path}`,
       {
         method: 'PUT',
         headers: { ...headers, 'Content-Type': 'application/json' },
@@ -60,14 +55,15 @@ export const githubService = {
       }
     );
     if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`GitHub API error: ${response.status} ${response.statusText}\n${errorText}`);
     }
     return response.json();
   },
 
   async createPR(title: string, body: string, head: string, base: string = 'main') {
     const response = await fetch(
-      `${BASE_URL}/repos/${REPO_OWNER}/${REPO_NAME}/pulls`,
+      `${config.baseUrl}/repos/${config.owner}/${config.repo}/pulls`,
       {
         method: 'POST',
         headers: { ...headers, 'Content-Type': 'application/json' },
@@ -80,7 +76,8 @@ export const githubService = {
       }
     );
     if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`GitHub API error: ${response.status} ${response.statusText}\n${errorText}`);
     }
     return response.json();
   }
