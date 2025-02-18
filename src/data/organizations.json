@@ -155,6 +155,19 @@
       "website": "https://yomi.digital",
       "email": "hey@yomi.digital",
       "phone": ""
+    },
+    {
+      "id": "1739898637830",
+      "name": "Trame di Quartiere",
+      "city": "catania",
+      "region": "Sicilia",
+      "province": "Catania",
+      "address": "via pistone 51",
+      "zipCode": "95131",
+      "sector": "Local projects",
+      "website": "",
+      "email": "",
+      "phone": ""
     }
   ]
 }
