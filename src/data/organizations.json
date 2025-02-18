@@ -90,6 +90,19 @@
       "website": "https://innergrowth.bologna.it",
       "email": "info@innergrowth.bologna.it",
       "phone": "+39 051 987654"
+    },
+    {
+      "id": "1739873975391",
+      "name": "urbe",
+      "city": "roma",
+      "region": "lazio",
+      "province": "roma",
+      "address": "largo dino frisullo",
+      "zipCode": "00153",
+      "sector": "Hackerspace",
+      "website": "",
+      "email": "",
+      "phone": ""
     }
   ]
-} 
+}
