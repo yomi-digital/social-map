@@ -129,6 +129,19 @@
       "website": "https://ethna.rocks",
       "email": "lava@ethna.rocks",
       "phone": ""
+    },
+    {
+      "id": "1739879945817",
+      "name": "Toolbox ",
+      "city": "Torino",
+      "region": "Piemonte ",
+      "province": "To",
+      "address": "Via Agostino da Montefeltro 2",
+      "zipCode": "10134",
+      "sector": "Coworking",
+      "website": "https://toolboxcoworking.com/",
+      "email": "",
+      "phone": ""
     }
   ]
 }
