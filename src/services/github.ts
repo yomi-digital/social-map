@@ -4,19 +4,25 @@ const REPO_NAME = 'social-map';
 const BASE_URL = 'https://api.github.com';
 
 const headers = {
-  'Authorization': `Bearer ${GITHUB_TOKEN}`,
+  'Authorization': `token ${GITHUB_TOKEN}`,
   'Accept': 'application/vnd.github.v3+json',
   'X-GitHub-Api-Version': '2022-11-28'
 };
 
 export const githubService = {
   async getFile(path: string) {
+    console.log('Token:', GITHUB_TOKEN);
+    console.log('Headers:', headers);
+    
     const response = await fetch(
       `${BASE_URL}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`,
       { headers }
     );
+    
     if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('GitHub API Error Response:', errorText);
+      throw new Error(`GitHub API error: ${response.status} ${response.statusText}\n${errorText}`);
     }
     return response.json();
   },
