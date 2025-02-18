@@ -6,9 +6,10 @@ export default defineConfig(({ mode }) => {
   // Carica le variabili d'ambiente
   const env = loadEnv(mode, process.cwd(), '')
   
-  console.log('Vite Config Environment:', {
+  console.log('Build Configuration:', {
     mode,
-    token: env.VITE_GITHUB_TOKEN ? 'present' : 'missing'
+    hasToken: !!env.VITE_GITHUB_TOKEN,
+    baseUrl: env.BASE_URL
   })
 
   return {

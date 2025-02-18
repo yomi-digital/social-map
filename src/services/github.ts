@@ -63,12 +63,13 @@ export const githubService = {
     try {
       const response = await fetch(url, { 
         headers,
-        cache: 'no-store' // Forza il bypass della cache
+        cache: 'no-store'
       });
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('GitHub API Error Response:', {
+        console.error('GitHub API Error:', {
+          url,
           status: response.status,
           statusText: response.statusText,
           errorText,
@@ -78,15 +79,13 @@ export const githubService = {
       }
       
       const data = await response.json();
-      console.log('File fetched successfully:', {
-        path,
-        sha: data.sha,
-        size: data.size
-      });
-      
       return data;
     } catch (error) {
-      console.error('Error in getFile:', error);
+      console.error('Fatal error in getFile:', {
+        path,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
       throw error;
     }
   },
@@ -105,8 +104,11 @@ export const githubService = {
 
   async createBranch(branchName: string, sha: string) {
     try {
-      // Prima otteniamo il riferimento al branch main
       const mainRef = await this.getMainBranchRef();
+      console.log('Creating branch with:', {
+        branchName,
+        mainRefSha: mainRef.object.sha
+      });
       
       const response = await fetch(
         `${baseUrl}/repos/${owner}/${repo}/git/refs`,
@@ -115,28 +117,29 @@ export const githubService = {
           headers: { ...headers, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ref: `refs/heads/${branchName}`,
-            sha: mainRef.object.sha // Usiamo lo SHA del branch main
+            sha: mainRef.object.sha
           })
         }
       );
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Branch creation error:', {
+        console.error('Branch creation failed:', {
           status: response.status,
           statusText: response.statusText,
           errorText,
-          requestBody: {
-            ref: `refs/heads/${branchName}`,
-            sha: mainRef.object.sha
-          }
+          branchName,
+          sha: mainRef.object.sha
         });
-        throw new Error(`GitHub API error: ${response.status} ${response.statusText}\n${errorText}`);
+        throw new Error(`Branch creation failed: ${response.status} ${response.statusText}\n${errorText}`);
       }
       
       return response.json();
     } catch (error) {
-      console.error('Error in createBranch:', error);
+      console.error('Fatal error in createBranch:', {
+        branchName,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       throw error;
     }
   },
