@@ -103,6 +103,19 @@
       "website": "",
       "email": "",
       "phone": ""
+    },
+    {
+      "id": "1739875771317",
+      "name": "Andrea Folino",
+      "city": "Torino",
+      "region": "Torino",
+      "province": "Torino",
+      "address": "Via Torino 3",
+      "zipCode": "10040",
+      "sector": "Web3",
+      "website": "",
+      "email": "andreafolino.bm@gmail.com",
+      "phone": ""
     }
   ]
 }
