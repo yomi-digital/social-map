@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ItalyMap from './components/ItalyMap';
-import { Organization } from './types/Organization';
-import organizationsData from './data/organizations.json';
+import AddOrganizationForm from './components/AddOrganizationForm';
+import AddButton from './components/AddButton';
+import organizations from './data/organizations.json';
 
 function App() {
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
-
-  useEffect(() => {
-    setOrganizations(organizationsData.organizations);
-  }, []);
+  const [orgs, setOrgs] = useState(organizations.organizations);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
-    <div className="w-full h-full">
-      <ItalyMap organizations={organizations} />
+    <div className="h-screen relative">
+      <ItalyMap organizations={orgs} />
+      <AddButton onClick={() => setIsFormOpen(true)} />
+      <AddOrganizationForm 
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+      />
     </div>
   );
 }
