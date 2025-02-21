@@ -329,6 +329,23 @@
         "lat": 41.0736836,
         "lng": 16.8718925
       }
+    },
+    {
+      "id": "1740180881200",
+      "name": "gr",
+      "city": "piazza armerina",
+      "region": "sicilia",
+      "province": "enna",
+      "address": "via roma 6",
+      "zipCode": "94015",
+      "sector": "Urban Garden",
+      "website": "",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 37.3834675138349,
+        "lng": 14.367934885650964
+      }
     }
   ]
 }
