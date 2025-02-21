@@ -295,6 +295,23 @@
         "lat": 41.87470348394303,
         "lng": 12.474681178458477
       }
+    },
+    {
+      "id": "1740179979969",
+      "name": "ASDASD",
+      "city": "ROma",
+      "region": "Lazio",
+      "province": "ROma",
+      "address": "Via Latina",
+      "zipCode": "00031",
+      "sector": "Fablab",
+      "website": "",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 41.8031724,
+        "lng": 12.638868
+      }
     }
   ]
 }
