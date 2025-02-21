@@ -278,6 +278,23 @@
         "lat": 37.38333309746828,
         "lng": 14.694266299626523
       }
+    },
+    {
+      "id": "1740179863270",
+      "name": "Urbe",
+      "city": "Roma",
+      "region": "Lazio",
+      "province": "Roma",
+      "address": "Largo Dino Frisullo",
+      "zipCode": "00153",
+      "sector": "Hackerspace",
+      "website": "",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 41.87470348394303,
+        "lng": 12.474681178458477
+      }
     }
   ]
 }
