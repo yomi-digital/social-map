@@ -312,6 +312,23 @@
         "lat": 41.8031724,
         "lng": 12.638868
       }
+    },
+    {
+      "id": "1740180648617",
+      "name": "BRABRA",
+      "city": "bari",
+      "region": "puglia",
+      "province": "bari",
+      "address": "via roma 55",
+      "zipCode": "70126",
+      "sector": "Permaculture",
+      "website": "",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 41.0736836,
+        "lng": 16.8718925
+      }
     }
   ]
 }
