@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Organization } from '../types/Organization';
 import { githubService } from '../services/github';
+import { getCoordinates } from '../services/geocoding';
 
 type Sector = Organization['sector'];
 
@@ -39,16 +40,24 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const id = Date.now().toString();
-    const newOrganization = {
-      id,
-      ...formData
-    };
-
-    const filePath = 'src/data/organizations.json';
-    const branchName = `add-org-${id}`;
-
     try {
+      // Prima ottieni le coordinate
+      const coordinates = await getCoordinates(formData.address, formData.city, formData.zipCode);
+      
+      if (!coordinates) {
+        throw new Error('Non è stato possibile trovare le coordinate per questo indirizzo');
+      }
+
+      const id = Date.now().toString();
+      const newOrganization = {
+        id,
+        ...formData,
+        coordinates // Includi le coordinate nell'oggetto
+      };
+
+      const filePath = 'src/data/organizations.json';
+      const branchName = `add-org-${id}`;
+
       console.log('1. Fetching current file...');
       const currentFile = await githubService.getFile(filePath);
       
@@ -63,7 +72,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
       await githubService.updateFile(
         filePath,
         JSON.stringify(currentContent, null, 2),
-        `Add ${formData.name}`,
+        `Add ${formData.name} with coordinates`,
         branchName,
         currentFile.sha
       );
@@ -71,7 +80,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
       console.log('5. Creating PR...');
       await githubService.createPR(
         `Add ${formData.name}`,
-        `Add new organization: ${formData.name}\n\n\`\`\`json\n${JSON.stringify(newOrganization, null, 2)}\n\`\`\``,
+        `Add new organization: ${formData.name}\n\nCoordinates: ${JSON.stringify(coordinates)}\n\n\`\`\`json\n${JSON.stringify(newOrganization, null, 2)}\n\`\`\``,
         branchName
       );
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import 'leaflet/dist/leaflet.css';
@@ -7,24 +7,16 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { Organization } from '../types/Organization';
 import L from 'leaflet';
 import { getCoordinates } from '../services/geocoding';
+import LoadingScreen from './LoadingScreen';
 
 // Fix per le icone di Leaflet
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+const iconUrl = '/images/marker-icon.png';
+const iconShadow = '/images/marker-shadow.png';
 
 // Crea un'icona personalizzata con il colore #00ffff
 const customIcon = L.divIcon({
   className: 'custom-div-icon',
-  html: `
-    <div style="
-      background-color: #00ffff;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 0 4px rgba(0,0,0,0.5);
-    "></div>
-  `,
+  html: `<div class="marker-pin"></div>`,
   iconSize: [24, 24],
   iconAnchor: [12, 12],
   popupAnchor: [0, -12]
@@ -42,12 +34,8 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-interface OrganizationWithCoordinates extends Organization {
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-}
+// Cache per le coordinate già calcolate
+const coordinatesCache = new Map<string, {lat: number, lng: number}>();
 
 interface ItalyMapProps {
   organizations: Organization[];
@@ -55,8 +43,32 @@ interface ItalyMapProps {
 
 const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isMapReady, setIsMapReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [orgsWithCoordinates, setOrgsWithCoordinates] = useState<OrganizationWithCoordinates[]>([]);
+  const [orgsWithCoordinates, setOrgsWithCoordinates] = useState<Organization[]>([]);
+
+  // Memorizza i marker per evitare ri-rendering non necessari
+  const markers = useMemo(() => 
+    orgsWithCoordinates.map(org => {
+      if (!org.coordinates) return null;
+      return (
+        <Marker
+          key={org.id}
+          position={[org.coordinates.lat, org.coordinates.lng]}
+          icon={customIcon}
+        >
+          <Popup>
+            <div className="min-w-[200px]">
+              <h3 className="font-bold">{org.name}</h3>
+              <p>{org.address}</p>
+              <p>{org.city}</p>
+            </div>
+          </Popup>
+        </Marker>
+      );
+    }).filter(Boolean),
+    [orgsWithCoordinates]
+  );
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -67,26 +79,37 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
           organizations.map(async (org) => {
             if (org.coordinates) {
               console.log('Using existing coordinates for:', org.name);
-              return org as OrganizationWithCoordinates;
+              return org;
             }
 
+            // Usa la cache se disponibile
+            const cacheKey = `${org.address}-${org.city}`;
+            if (coordinatesCache.has(cacheKey)) {
+              console.log('Using cached coordinates for:', org.name);
+              return {
+                ...org,
+                coordinates: coordinatesCache.get(cacheKey)
+              };
+            }
+
+            // Altrimenti ottieni nuove coordinate
             console.log('Fetching coordinates for:', org.name);
             const coords = await getCoordinates(org.address, org.city, org.zipCode);
             if (coords) {
               console.log('Got coordinates for:', org.name, coords);
+              coordinatesCache.set(cacheKey, coords);
               return {
                 ...org,
                 coordinates: coords
-              } as OrganizationWithCoordinates;
+              };
             }
             console.log('No coordinates found for:', org.name);
-            return null;
+            return org;
           })
         );
 
-        const validOrgs = orgsWithCoords.filter((org): org is OrganizationWithCoordinates => org !== null);
-        console.log('Organizations with valid coordinates:', validOrgs.length);
-        setOrgsWithCoordinates(validOrgs);
+        console.log('Organizations with valid coordinates:', orgsWithCoords.length);
+        setOrgsWithCoordinates(orgsWithCoords);
         setIsLoading(false);
       } catch (err) {
         console.error('Error fetching coordinates:', err);
@@ -100,15 +123,12 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
     }
   }, [organizations]);
 
-  if (isLoading) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4">Caricamento mappa...</p>
-        </div>
-      </div>
-    );
+  const handleLoadingComplete = React.useCallback(() => {
+    setIsMapReady(true);
+  }, []);
+
+  if (!isMapReady) {
+    return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
   }
 
   if (error) {
@@ -129,6 +149,8 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
         zoom={6}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
+        preferCanvas={true}
+        className={`h-full w-full transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -136,65 +158,15 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
         />
         <MarkerClusterGroup
           chunkedLoading
-          iconCreateFunction={(cluster) => {
-            return L.divIcon({
-              html: `<div class="cluster-icon">${cluster.getChildCount()}</div>`,
-              className: 'custom-marker-cluster',
-              iconSize: L.point(40, 40)
-            });
-          }}
+          maxClusterRadius={50}
+          spiderfyOnMaxZoom={true}
+          removeOutsideVisibleBounds={true}
         >
-          {orgsWithCoordinates.map((org) => (
-            <Marker
-              key={org.id}
-              position={[org.coordinates.lat, org.coordinates.lng]}
-              icon={customIcon}
-            >
-              <Popup>
-                <div className="min-w-[250px]">
-                  <h3 className="font-bold text-lg mb-2">{org.name}</h3>
-                  <p className="text-gray-700">{org.address}</p>
-                  <p className="text-gray-700 mb-2">{org.zipCode} - {org.city} ({org.province})</p>
-                  <p className="text-gray-600 mb-1">
-                    <span className="font-semibold">Region:</span> {org.region}
-                  </p>
-                  <p className="text-gray-600 mb-3">
-                    <span className="font-semibold">Sector:</span> {org.sector}
-                  </p>
-                  {(org.website || org.email || org.phone) && (
-                    <div className="border-t pt-2">
-                      {org.website && (
-                        <p className="text-sm">
-                          <a href={org.website} target="_blank" rel="noopener noreferrer" 
-                             className="text-blue-600 hover:underline">
-                            Website
-                          </a>
-                        </p>
-                      )}
-                      {org.email && (
-                        <p className="text-sm">
-                          <a href={`mailto:${org.email}`} className="text-blue-600 hover:underline">
-                            {org.email}
-                          </a>
-                        </p>
-                      )}
-                      {org.phone && (
-                        <p className="text-sm">
-                          <a href={`tel:${org.phone}`} className="text-blue-600 hover:underline">
-                            {org.phone}
-                          </a>
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {markers}
         </MarkerClusterGroup>
       </MapContainer>
     </div>
   );
 };
 
-export default ItalyMap; 
+export default React.memo(ItalyMap); 

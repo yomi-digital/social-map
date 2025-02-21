@@ -14,6 +14,8 @@ html, body, #root {
   width: 100%;
   height: 100%;
   position: absolute;
+  will-change: transform;
+  contain: strict;
 }
 
 .leaflet-tile-pane {
@@ -23,6 +25,7 @@ html, body, #root {
 /* Stili per il cluster */
 .custom-marker-cluster {
   background: transparent;
+  contain: layout style;
 }
 
 .cluster-icon {
@@ -37,4 +40,24 @@ html, body, #root {
   font-size: 14px;
   border: 2px solid white;
   box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.marker-pin {
+  background-color: #00ffff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+/* Precarica le tile */
+.leaflet-tile {
+  will-change: transform;
+  contain: content;
+}
+
+/* Ottimizza il clustering */
+.custom-marker-cluster {
+  contain: layout style;
 } 
