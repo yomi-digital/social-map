@@ -12,9 +12,12 @@ const SECTORS: Sector[] = [
   'Events',
   'Permaculture',
   'Web3',
-  'Local projects',
-  'Inner development',
-  'Education'
+  'Local Projects',
+  'Inner Development',
+  'Education',
+  'Urban Garden',
+  'Open To Residences',
+  'Other'
 ];
 
 interface AddOrganizationFormProps {
