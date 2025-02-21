@@ -295,6 +295,23 @@
         "lat": 45.46378696472409,
         "lng": 9.19020968177533
       }
+    },
+    {
+      "id": "1740161966775",
+      "name": "livio",
+      "city": "aidone",
+      "region": "sicilia",
+      "province": "enna",
+      "address": "via garibaldi 55",
+      "zipCode": "94010",
+      "sector": "Fablab",
+      "website": "",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 37.41513372918796,
+        "lng": 14.447165528729945
+      }
     }
   ]
 }
