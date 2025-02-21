@@ -312,6 +312,23 @@
         "lat": 37.41513372918796,
         "lng": 14.447165528729945
       }
+    },
+    {
+      "id": "1740163583971",
+      "name": "L'Eretico",
+      "city": "Ramacca",
+      "region": "Sicilia",
+      "province": "Catania",
+      "address": "via firenze 9",
+      "zipCode": "95040",
+      "sector": "Events",
+      "website": "https://lereticobooking.com",
+      "email": "leretico@gmail.com",
+      "phone": "333333333333",
+      "coordinates": {
+        "lat": 37.38333309746828,
+        "lng": 14.694266299626523
+      }
     }
   ]
 }
