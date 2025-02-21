@@ -41,6 +41,14 @@ interface ItalyMapProps {
   organizations: Organization[];
 }
 
+// Funzione di utilità per normalizzare il testo
+const normalizeText = (text: string): string => {
+  return text
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
 const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMapReady, setIsMapReady] = useState(false);
@@ -58,10 +66,63 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
           icon={customIcon}
         >
           <Popup>
-            <div className="min-w-[200px]">
-              <h3 className="font-bold">{org.name}</h3>
-              <p>{org.address}</p>
-              <p>{org.city}</p>
+            <div className="min-w-[300px] p-2">
+              <h3 className="text-xl font-bold mb-2">{normalizeText(org.name)}</h3>
+              
+              <div className="space-y-2 text-sm">
+                {/* Indirizzo completo */}
+                <p className="font-medium">
+                  {normalizeText(org.address)}<br />
+                  {org.zipCode} {normalizeText(org.city)} ({normalizeText(org.province)})<br />
+                  {normalizeText(org.region)}
+                </p>
+
+                {/* Settore */}
+                <p>
+                  <span className="font-medium">Settore:</span> {org.sector}
+                </p>
+
+                {/* Contatti */}
+                <div className="space-y-1">
+                  {org.website && (
+                    <p>
+                      <span className="font-medium">Website:</span>{' '}
+                      <a 
+                        href={org.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {org.website.toLowerCase()}
+                      </a>
+                    </p>
+                  )}
+                  
+                  {org.email && (
+                    <p>
+                      <span className="font-medium">Email:</span>{' '}
+                      <a 
+                        href={`mailto:${org.email}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {org.email.toLowerCase()}
+                      </a>
+                    </p>
+                  )}
+                  
+                  {org.phone && (
+                    <p>
+                      <span className="font-medium">Telefono:</span>{' '}
+                      <a 
+                        href={`tel:${org.phone}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {org.phone}
+                      </a>
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </Popup>
         </Marker>
