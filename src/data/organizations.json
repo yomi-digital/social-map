@@ -14,7 +14,7 @@
       "phone": "+39 02 1234567",
       "coordinates": {
         "lat": 45.4642,
-        "lng": 9.1900
+        "lng": 9.19
       }
     },
     {
@@ -65,7 +65,7 @@
       "phone": "+39 02 8976543",
       "coordinates": {
         "lat": 45.4642,
-        "lng": 9.1900
+        "lng": 9.19
       }
     },
     {
@@ -167,7 +167,7 @@
       "phone": "",
       "coordinates": {
         "lat": 37.5079,
-        "lng": 15.0830
+        "lng": 15.083
       }
     },
     {
@@ -277,6 +277,23 @@
       "coordinates": {
         "lat": 46.0748,
         "lng": 11.1217
+      }
+    },
+    {
+      "id": "1740161236579",
+      "name": "PIM",
+      "city": "Milano",
+      "region": "Lombardia",
+      "province": "Milano",
+      "address": "Viale Legioni Romane 7",
+      "zipCode": "20147",
+      "sector": "Events",
+      "website": "",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 45.46378696472409,
+        "lng": 9.19020968177533
       }
     }
   ]
