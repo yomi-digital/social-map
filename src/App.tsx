@@ -6,7 +6,8 @@ import { githubService } from './services/github';
 import { Organization } from './types/Organization';
 import RefreshButton from './components/RefreshButton';
 
-console.log('VITE_GITHUB_TOKEN:', import.meta.env.VITE_GITHUB_TOKEN);
+// Access environment variables through import.meta.env is supported in Vite
+console.log('VITE_GITHUB_TOKEN:', (import.meta as any).env.VITE_GITHUB_TOKEN);
 
 function App() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
