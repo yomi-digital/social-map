@@ -329,6 +329,24 @@
         "lat": 41.0736836,
         "lng": 16.8718925
       }
+    },
+    {
+      "id": "1740241272778",
+      "name": "Moulin Rouge",
+      "city": "Parigi",
+      "country": "FR",
+      "region": "Ile De France",
+      "province": "Parigi",
+      "address": "82 Bd de Clichy",
+      "zipCode": "75018",
+      "sector": "Fablab",
+      "website": "",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 48.8841094,
+        "lng": 2.3323564
+      }
     }
   ]
 }
