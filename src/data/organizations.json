@@ -397,6 +397,92 @@
         "lat": 48.8841094,
         "lng": 2.3323564
       }
+    },
+    {
+      "id": "hackerspace-berlin",
+      "name": "C-Base Hackerspace",
+      "city": "Berlin",
+      "country": "Germany",
+      "region": "Berlin",
+      "province": "Berlin",
+      "address": "Rungestraße 20",
+      "zipCode": "10179",
+      "sector": "Hackerspace",
+      "website": "https://c-base.org",
+      "email": "info@c-base.org",
+      "phone": "+49 30 12345678",
+      "coordinates": {
+        "lat": 52.5123,
+        "lng": 13.4178
+      }
+    },
+    {
+      "id": "impact-hub-amsterdam",
+      "name": "Impact Hub Amsterdam",
+      "city": "Amsterdam",
+      "country": "Netherlands",
+      "region": "North Holland",
+      "province": "Amsterdam",
+      "address": "Linnaeusstraat 2C",
+      "zipCode": "1092CK",
+      "sector": "Coworking",
+      "website": "https://amsterdam.impacthub.net",
+      "email": "amsterdam@impacthub.net",
+      "coordinates": {
+        "lat": 52.3602,
+        "lng": 4.9186
+      }
+    },
+    {
+      "id": "fab-lab-barcelona",
+      "name": "Fab Lab Barcelona",
+      "city": "Barcelona",
+      "country": "Spain",
+      "region": "Catalonia",
+      "province": "Barcelona",
+      "address": "Carrer de Pujades 102",
+      "zipCode": "08005",
+      "sector": "Fablab",
+      "website": "https://fablabbcn.org",
+      "email": "info@fablabbcn.org",
+      "coordinates": {
+        "lat": 41.3975,
+        "lng": 2.1927
+      }
+    },
+    {
+      "id": "station-f-paris",
+      "name": "Station F",
+      "city": "Paris",
+      "country": "France",
+      "region": "Ile-de-France",
+      "province": "Paris",
+      "address": "5 Parvis Alan Turing",
+      "zipCode": "75013",
+      "sector": "Coworking",
+      "website": "https://stationf.co",
+      "email": "contact@stationf.co",
+      "coordinates": {
+        "lat": 48.8339,
+        "lng": 2.3712
+      }
+    },
+    {
+      "id": "betahaus-copenhagen",
+      "name": "Betahaus Copenhagen",
+      "city": "Copenhagen",
+      "country": "Denmark",
+      "region": "Capital Region",
+      "province": "Copenhagen",
+      "address": "Thoravej 26",
+      "zipCode": "2400",
+      "sector": "Coworking",
+      "website": "https://copenhagen.betahaus.dk",
+      "email": "copenhagen@betahaus.dk",
+      "coordinates": {
+        "lat": 55.7046,
+        "lng": 12.5409
+      }
     }
   ]
 }
