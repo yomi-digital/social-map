@@ -3,24 +3,23 @@ import { Organization } from '../types/Organization';
 import { githubService } from '../services/github';
 import { getCoordinates } from '../services/geocoding';
 import Select from 'react-select';
-import countryList from 'react-select-country-list';
-import { normalizeCountryName } from '../utils/countryNormalization';
+import { normalizeCountryName, NORMALIZED_COUNTRIES } from '../utils/countryNormalization';
 
 type Sector = Organization['sector'];
 
-const SECTORS: Sector[] = [
-  'Hackerspace',
-  'Coworking',
-  'Fablab',
-  'Events',
-  'Permaculture',
-  'Web3',
-  'Local Projects',
-  'Inner Development',
-  'Education',
-  'Urban Garden',
-  'Open To Residences',
-  'Other'
+const SECTORS = [
+  { value: 'Hackerspace', label: 'Hackerspace' },
+  { value: 'Coworking', label: 'Coworking' },
+  { value: 'Fablab', label: 'Fablab' },
+  { value: 'Events', label: 'Events' },
+  { value: 'Permaculture', label: 'Permaculture' },
+  { value: 'Web3', label: 'Web3' },
+  { value: 'Local Projects', label: 'Local Projects' },
+  { value: 'Inner Development', label: 'Inner Development' },
+  { value: 'Education', label: 'Education' },
+  { value: 'Urban Garden', label: 'Urban Garden' },
+  { value: 'Open To Residences', label: 'Open To Residences' },
+  { value: 'Other', label: 'Other' }
 ];
 
 interface AddOrganizationFormProps {
@@ -30,11 +29,14 @@ interface AddOrganizationFormProps {
 }
 
 const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizationFormProps) => {
-  const countries = useMemo(() => [
-    { value: 'Italy', label: 'Italy' },
-    { value: 'France', label: 'France' }
-  ], []);
-  
+  const ALL_COUNTRIES = useMemo(() => {
+    const uniqueCountries = new Set(Object.values(NORMALIZED_COUNTRIES));
+    return Array.from(uniqueCountries).sort().map(country => ({
+      value: country,
+      label: country
+    }));
+  }, []);
+
   const [formData, setFormData] = useState({
     name: '',
     city: '',
@@ -43,7 +45,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
     province: '',
     address: '',
     zipCode: '',
-    sector: '' as Sector,
+    sectors: [] as string[],
     website: '',
     email: '',
     phone: ''
@@ -139,7 +141,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Nome</label>
+                <label className="block text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
                   required
@@ -150,7 +152,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Città</label>
+                <label className="block text-sm font-medium text-gray-700">City</label>
                 <input
                   type="text"
                   required
@@ -163,16 +165,29 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
               <div>
                 <label className="block text-sm font-medium text-gray-700">Country</label>
                 <Select
-                  options={countries}
-                  value={countries.find(country => country.value === formData.country)}
+                  options={ALL_COUNTRIES}
+                  value={ALL_COUNTRIES.find(country => country.value === formData.country)}
                   onChange={(option) => setFormData({...formData, country: option?.value || ''})}
                   className="mt-1"
-                  placeholder="Select a country..."
+                  placeholder="Type to search countries..."
+                  isSearchable={true}
+                  noOptionsMessage={() => "No countries found"}
+                  filterOption={(option, input) => {
+                    if (!input) return true;
+                    const searchInput = input.toLowerCase();
+                    return (
+                      option.label.toLowerCase().includes(searchInput) ||
+                      Object.entries(NORMALIZED_COUNTRIES).some(([key, value]) => 
+                        key.toLowerCase().includes(searchInput) && 
+                        value === option.value
+                      )
+                    );
+                  }}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Regione</label>
+                <label className="block text-sm font-medium text-gray-700">Region</label>
                 <input
                   type="text"
                   required
@@ -183,7 +198,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Provincia</label>
+                <label className="block text-sm font-medium text-gray-700">Province</label>
                 <input
                   type="text"
                   required
@@ -194,7 +209,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Indirizzo</label>
+                <label className="block text-sm font-medium text-gray-700">Address</label>
                 <input
                   type="text"
                   required
@@ -205,7 +220,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">CAP</label>
+                <label className="block text-sm font-medium text-gray-700">ZIP Code</label>
                 <input
                   type="text"
                   required
@@ -215,20 +230,20 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Settore</label>
-                <select
-                  required
-                  value={formData.sector}
-                  onChange={(e) => setFormData({...formData, sector: e.target.value as Sector})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                >
-                  <option value="">Seleziona un settore</option>
-                  {SECTORS.map(sector => (
-                    <option key={sector} value={sector}>{sector}</option>
-                  ))}
-                </select>
+                <label className="block text-sm font-medium text-gray-700">Sectors</label>
+                <Select
+                  isMulti
+                  options={SECTORS}
+                  value={SECTORS.filter(sector => formData.sectors.includes(sector.value))}
+                  onChange={(selected) => {
+                    const sectors = selected ? selected.map(option => option.value) : [];
+                    setFormData({...formData, sectors});
+                  }}
+                  className="mt-1"
+                  placeholder="Select sectors..."
+                />
               </div>
               
               <div>
@@ -238,6 +253,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
                   value={formData.website}
                   onChange={(e) => setFormData({...formData, website: e.target.value})}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="https://..."
                 />
               </div>
               
@@ -252,58 +268,30 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Telefono</label>
+                <label className="block text-sm font-medium text-gray-700">Phone</label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  placeholder="+39 "
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
             </div>
             
-            <div className="flex justify-end mt-6">
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Cancel
+              </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`
-                  px-4 py-2 rounded-md
-                  flex items-center space-x-2
-                  ${isSubmitting 
-                    ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-blue-600 hover:bg-blue-700'
-                  }
-                  text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                `}
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
-                {isSubmitting ? (
-                  <>
-                    <svg 
-                      className="animate-spin h-5 w-5 mr-2" 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      fill="none" 
-                      viewBox="0 0 24 24"
-                    >
-                      <circle 
-                        className="opacity-25" 
-                        cx="12" 
-                        cy="12" 
-                        r="10" 
-                        stroke="currentColor" 
-                        strokeWidth="4"
-                      />
-                      <path 
-                        className="opacity-75" 
-                        fill="currentColor" 
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    <span>Submitting...</span>
-                  </>
-                ) : (
-                  'Submit'
-                )}
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
             </div>
           </form>
