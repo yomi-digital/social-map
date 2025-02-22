@@ -9,6 +9,7 @@ import L from 'leaflet';
 import { getCoordinates } from '../services/geocoding';
 import LoadingScreen from './LoadingScreen';
 import Filters from './Filters';
+import { normalizeCountryName } from '../utils/countryNormalization';
 
 // Fix per le icone di Leaflet
 const iconUrl = '/images/marker-icon.png';
@@ -64,11 +65,18 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
   // Filtra le organizzazioni in base ai filtri selezionati
   const filteredOrganizations = useMemo(() => {
     return orgsWithCoordinates.filter(org => {
-      const matchesCountry = filters.countries.length === 0 || filters.countries.includes('Italia');
-      const matchesRegion = filters.regions.length === 0 || filters.regions.includes(
-        org.region.charAt(0).toUpperCase() + org.region.slice(1).toLowerCase()
-      );
-      const matchesSector = filters.sectors.length === 0 || filters.sectors.includes(org.sector);
+      if (!org) return false;
+      
+      const normalizedOrgCountry = normalizeCountryName(org.country || '');
+      
+      const matchesCountry = filters.countries.length === 0 || 
+        filters.countries.includes(normalizedOrgCountry);
+      
+      const matchesRegion = filters.regions.length === 0 || 
+        (org.region && filters.regions.includes(org.region));
+      
+      const matchesSector = filters.sectors.length === 0 || 
+        (org.sector && filters.sectors.includes(org.sector));
 
       return matchesCountry && matchesRegion && matchesSector;
     });
@@ -76,11 +84,13 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
 
   // Aggiorna i markers per usare le organizzazioni filtrate
   const markers = useMemo(() => 
-    filteredOrganizations.map(org => {
+    filteredOrganizations.map((org, index) => {
       if (!org.coordinates) return null;
+      // Usa una combinazione di id e index per assicurare chiavi uniche
+      const uniqueKey = `${org.id}-${index}`;
       return (
         <Marker
-          key={org.id}
+          key={uniqueKey}
           position={[org.coordinates.lat, org.coordinates.lng]}
           icon={customIcon}
         >
@@ -174,7 +184,12 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
 
             // Altrimenti ottieni nuove coordinate
             console.log('Fetching coordinates for:', org.name);
-            const coords = await getCoordinates(org.address, org.city, org.zipCode);
+            const coords = await getCoordinates(
+              org.address, 
+              org.city, 
+              org.zipCode,
+              normalizeCountryName(org.country)
+            );
             if (coords) {
               console.log('Got coordinates for:', org.name, coords);
               coordinatesCache.set(cacheKey, coords);

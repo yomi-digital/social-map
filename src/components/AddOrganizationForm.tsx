@@ -4,6 +4,7 @@ import { githubService } from '../services/github';
 import { getCoordinates } from '../services/geocoding';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
+import { normalizeCountryName } from '../utils/countryNormalization';
 
 type Sector = Organization['sector'];
 
@@ -29,12 +30,15 @@ interface AddOrganizationFormProps {
 }
 
 const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizationFormProps) => {
-  const countries = useMemo(() => countryList().getData(), []);
+  const countries = useMemo(() => [
+    { value: 'Italy', label: 'Italy' },
+    { value: 'France', label: 'France' }
+  ], []);
   
   const [formData, setFormData] = useState({
     name: '',
     city: '',
-    country: '',
+    country: 'Italy',
     region: '',
     province: '',
     address: '',
@@ -51,18 +55,28 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
     setIsSubmitting(true);
     
     try {
-      // Prima ottieni le coordinate
-      const coordinates = await getCoordinates(formData.address, formData.city, formData.zipCode, formData.country);
+      const normalizedFormData = {
+        ...formData,
+        country: normalizeCountryName(formData.country || 'Italy')
+      };
+
+      const coordinates = await getCoordinates(
+        normalizedFormData.address, 
+        normalizedFormData.city, 
+        normalizedFormData.zipCode, 
+        normalizedFormData.country
+      );
       
       if (!coordinates) {
         throw new Error('Non è stato possibile trovare le coordinate per questo indirizzo');
       }
 
-      const id = Date.now().toString();
+      const id = `${formData.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Date.now()}`;
+
       const newOrganization = {
         id,
-        ...formData,
-        coordinates // Includi le coordinate nell'oggetto
+        ...normalizedFormData,
+        coordinates
       };
 
       const filePath = 'src/data/organizations.json';
