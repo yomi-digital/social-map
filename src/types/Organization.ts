@@ -2,6 +2,7 @@ export interface Organization {
   id: string;
   name: string;
   city: string;
+  country: string;
   region: string;
   province: string;
   address: string;

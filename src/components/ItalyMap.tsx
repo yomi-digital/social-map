@@ -8,6 +8,7 @@ import { Organization } from '../types/Organization';
 import L from 'leaflet';
 import { getCoordinates } from '../services/geocoding';
 import LoadingScreen from './LoadingScreen';
+import Filters from './Filters';
 
 // Fix per le icone di Leaflet
 const iconUrl = '/images/marker-icon.png';
@@ -54,10 +55,28 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
   const [isMapReady, setIsMapReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orgsWithCoordinates, setOrgsWithCoordinates] = useState<Organization[]>([]);
+  const [filters, setFilters] = useState({
+    countries: [] as string[],
+    regions: [] as string[],
+    sectors: [] as string[]
+  });
 
-  // Memorizza i marker per evitare ri-rendering non necessari
+  // Filtra le organizzazioni in base ai filtri selezionati
+  const filteredOrganizations = useMemo(() => {
+    return orgsWithCoordinates.filter(org => {
+      const matchesCountry = filters.countries.length === 0 || filters.countries.includes('Italia');
+      const matchesRegion = filters.regions.length === 0 || filters.regions.includes(
+        org.region.charAt(0).toUpperCase() + org.region.slice(1).toLowerCase()
+      );
+      const matchesSector = filters.sectors.length === 0 || filters.sectors.includes(org.sector);
+
+      return matchesCountry && matchesRegion && matchesSector;
+    });
+  }, [orgsWithCoordinates, filters]);
+
+  // Aggiorna i markers per usare le organizzazioni filtrate
   const markers = useMemo(() => 
-    orgsWithCoordinates.map(org => {
+    filteredOrganizations.map(org => {
       if (!org.coordinates) return null;
       return (
         <Marker
@@ -128,7 +147,7 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
         </Marker>
       );
     }).filter(Boolean),
-    [orgsWithCoordinates]
+    [filteredOrganizations]
   );
 
   useEffect(() => {
@@ -204,7 +223,11 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
   }
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full relative">
+      <Filters 
+        organizations={orgsWithCoordinates}
+        onFiltersChange={setFilters}
+      />
       <MapContainer
         center={[41.9028, 12.4964]}
         zoom={6}

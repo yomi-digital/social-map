@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Organization } from '../types/Organization';
 import { githubService } from '../services/github';
 import { getCoordinates } from '../services/geocoding';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
 
 type Sector = Organization['sector'];
 
@@ -27,9 +29,12 @@ interface AddOrganizationFormProps {
 }
 
 const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizationFormProps) => {
+  const countries = useMemo(() => countryList().getData(), []);
+  
   const [formData, setFormData] = useState({
     name: '',
     city: '',
+    country: '',
     region: '',
     province: '',
     address: '',
@@ -47,7 +52,7 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
     
     try {
       // Prima ottieni le coordinate
-      const coordinates = await getCoordinates(formData.address, formData.city, formData.zipCode);
+      const coordinates = await getCoordinates(formData.address, formData.city, formData.zipCode, formData.country);
       
       if (!coordinates) {
         throw new Error('Non è stato possibile trovare le coordinate per questo indirizzo');
@@ -138,6 +143,17 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
                   value={formData.city}
                   onChange={(e) => setFormData({...formData, city: e.target.value})}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Country</label>
+                <Select
+                  options={countries}
+                  value={countries.find(country => country.value === formData.country)}
+                  onChange={(option) => setFormData({...formData, country: option?.value || ''})}
+                  className="mt-1"
+                  placeholder="Select a country..."
                 />
               </div>
               
