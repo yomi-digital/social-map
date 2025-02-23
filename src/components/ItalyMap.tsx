@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
@@ -49,6 +49,33 @@ const normalizeText = (text: string): string => {
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
+};
+
+// Componente per gestire il bounds della mappa
+const MapBounds: React.FC<{ organizations: Organization[] }> = ({ organizations }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (organizations.length === 0) return;
+
+    // Raccogli tutte le coordinate valide
+    const validCoords = organizations
+      .filter(org => org.coordinates)
+      .map(org => [org.coordinates.lat, org.coordinates.lng]);
+
+    if (validCoords.length === 0) return;
+
+    // Crea un bounds che include tutte le coordinate
+    const bounds = L.latLngBounds(validCoords);
+    
+    // Aggiungi un padding per una migliore visualizzazione
+    map.fitBounds(bounds, {
+      padding: [50, 50],
+      maxZoom: 6 // Limita lo zoom massimo
+    });
+  }, [organizations, map]);
+
+  return null;
 };
 
 const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
@@ -244,8 +271,8 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
         onFiltersChange={setFilters}
       />
       <MapContainer
-        center={[41.9028, 12.4964]}
-        zoom={6}
+        center={[48.8566, 2.3522]} // Centro Europa come default
+        zoom={4} // Zoom iniziale più ampio
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
         preferCanvas={true}
@@ -263,6 +290,7 @@ const ItalyMap: React.FC<ItalyMapProps> = ({ organizations }) => {
         >
           {markers}
         </MarkerClusterGroup>
+        <MapBounds organizations={filteredOrganizations} />
       </MapContainer>
     </div>
   );
