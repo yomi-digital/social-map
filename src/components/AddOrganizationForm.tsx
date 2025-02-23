@@ -28,6 +28,10 @@ interface AddOrganizationFormProps {
   onSubmitSuccess: () => void;
 }
 
+const inputClassName = "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-sm";
+const selectClassName = "mt-1 text-sm";
+const labelClassName = "block text-sm font-medium text-gray-700 mb-1";
+
 const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizationFormProps) => {
   const ALL_COUNTRIES = useMemo(() => {
     const uniqueCountries = new Set(Object.values(NORMALIZED_COUNTRIES));
@@ -125,114 +129,120 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[1001]">
-      <div className="bg-white rounded-lg shadow max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">Add Your Space</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Add Your Space</h2>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-500 hover:text-gray-700 transition-colors"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <label className={labelClassName}>Name</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter space name..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">City</label>
+                <label className={labelClassName}>City</label>
                 <input
                   type="text"
                   required
                   value={formData.city}
                   onChange={(e) => setFormData({...formData, city: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter city..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Country</label>
+                <label className={labelClassName}>Country</label>
                 <Select
                   options={ALL_COUNTRIES}
                   value={ALL_COUNTRIES.find(country => country.value === formData.country)}
                   onChange={(option) => setFormData({...formData, country: option?.value || ''})}
-                  className="mt-1"
+                  className={selectClassName}
                   placeholder="Type to search countries..."
                   isSearchable={true}
                   noOptionsMessage={() => "No countries found"}
-                  filterOption={(option, input) => {
-                    if (!input) return true;
-                    const searchInput = input.toLowerCase();
-                    return (
-                      option.label.toLowerCase().includes(searchInput) ||
-                      Object.entries(NORMALIZED_COUNTRIES).some(([key, value]) => 
-                        key.toLowerCase().includes(searchInput) && 
-                        value === option.value
-                      )
-                    );
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderColor: '#D1D5DB',
+                      boxShadow: 'none',
+                      '&:hover': {
+                        borderColor: '#3B82F6'
+                      }
+                    })
                   }}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Region</label>
+                <label className={labelClassName}>Region</label>
                 <input
                   type="text"
                   required
                   value={formData.region}
                   onChange={(e) => setFormData({...formData, region: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter region..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Province</label>
+                <label className={labelClassName}>Province</label>
                 <input
                   type="text"
                   required
                   value={formData.province}
                   onChange={(e) => setFormData({...formData, province: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter province..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Address</label>
+                <label className={labelClassName}>Address</label>
                 <input
                   type="text"
                   required
                   value={formData.address}
                   onChange={(e) => setFormData({...formData, address: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter street address..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">ZIP Code</label>
+                <label className={labelClassName}>ZIP Code</label>
                 <input
                   type="text"
                   required
                   pattern="[0-9]{5}"
                   value={formData.zipCode}
                   onChange={(e) => setFormData({...formData, zipCode: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter ZIP code..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Sectors</label>
+                <label className={labelClassName}>Sectors</label>
                 <Select
                   isMulti
                   options={SECTORS}
@@ -241,55 +251,67 @@ const AddOrganizationForm = ({ isOpen, onClose, onSubmitSuccess }: AddOrganizati
                     const sectors = selected ? selected.map(option => option.value) : [];
                     setFormData({...formData, sectors});
                   }}
-                  className="mt-1"
+                  className={selectClassName}
                   placeholder="Select sectors..."
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderColor: '#D1D5DB',
+                      boxShadow: 'none',
+                      '&:hover': {
+                        borderColor: '#3B82F6'
+                      }
+                    })
+                  }}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Website</label>
+                <label className={labelClassName}>Website</label>
                 <input
                   type="url"
                   value={formData.website}
                   onChange={(e) => setFormData({...formData, website: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
                   placeholder="https://..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <label className={labelClassName}>Email</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter email..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700">Phone</label>
+                <label className={labelClassName}>Phone</label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className={inputClassName}
+                  placeholder="Enter phone number..."
                 />
               </div>
             </div>
-            
-            <div className="mt-6 flex justify-end space-x-3">
+
+            <div className="flex justify-end space-x-3 pt-4 border-t">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
