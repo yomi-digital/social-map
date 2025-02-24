@@ -483,6 +483,27 @@
         "lat": 55.7046,
         "lng": 12.5409
       }
+    },
+    {
+      "id": "spaghetteth-1740391785245",
+      "name": "SPAGHETTETH",
+      "city": "TORINO",
+      "country": "Italy",
+      "region": "PIEMONTE",
+      "province": "TORINO",
+      "address": "Via Treviso 36",
+      "zipCode": "10144",
+      "sectors": [
+        "Events",
+        "Web3"
+      ],
+      "website": "https://spaghett-eth.com",
+      "email": "",
+      "phone": "",
+      "coordinates": {
+        "lat": 45.086822049999995,
+        "lng": 7.667006244190803
+      }
     }
   ]
 }
