@@ -504,6 +504,44 @@
         "lat": 45.086822049999995,
         "lng": 7.667006244190803
       }
+    },
+    {
+      "id": "giggino-o-fetiente-la-pizza-bollente-1740589903549",
+      "name": "Giggino o fetiente la pizza bollente",
+      "city": "",
+      "country": "Italy",
+      "region": "",
+      "province": "",
+      "address": "",
+      "zipCode": "",
+      "email": "",
+      "metamaskAddress": "0x70b42f99c63c30dcb65591e8af0d5ee55e1c4c4c",
+      "lodging": {
+        "available": false,
+        "capacity": 0
+      },
+      "type": "Live Pal",
+      "coordinates": {
+        "lat": 42.6384261,
+        "lng": 12.674297
+      },
+      "website": "",
+      "venue": {
+        "capacity": 200,
+        "hasAcoustic": true,
+        "hasBands": true,
+        "hasFood": false,
+        "stage": {
+          "hasPA": false,
+          "hasLights": false
+        }
+      },
+      "xlsLink": "",
+      "cachetRange": {
+        "min": 0,
+        "max": 100
+      },
+      "phone": ""
     }
   ]
 }
