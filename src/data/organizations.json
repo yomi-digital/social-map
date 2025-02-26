@@ -504,6 +504,38 @@
         "lat": 45.086822049999995,
         "lng": 7.667006244190803
       }
+    },
+    {
+      "id": "giorgio-1740589768778",
+      "name": "giorgio",
+      "city": "",
+      "country": "Italy",
+      "region": "",
+      "province": "",
+      "address": "",
+      "zipCode": "",
+      "email": "",
+      "metamaskAddress": "0x70b42f99c63c30dcb65591e8af0d5ee55e1c4c4c",
+      "lodging": {
+        "available": false,
+        "capacity": 0
+      },
+      "type": "Gear Pal",
+      "coordinates": {
+        "lat": 42.6384261,
+        "lng": 12.674297
+      },
+      "equipment": {
+        "audio": [
+          {
+            "name": "chitarra",
+            "description": "",
+            "quantity": 1
+          }
+        ],
+        "video": [],
+        "lights": []
+      }
     }
   ]
 }
